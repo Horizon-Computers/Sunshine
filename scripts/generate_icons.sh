@@ -31,4 +31,29 @@ for size in "${SIZES[@]}"; do
   echo "==> ${dest}"
 done
 
+# Icône Windows (.ico multi-résolutions)
+if command -v magick >/dev/null || command -v convert >/dev/null; then
+  IM="$(command -v magick || command -v convert)"
+  "${IM}" "${OUT}"/sunshine-{16,24,32,48,64,128,256}.png "${OUT}/sunshine.ico"
+  echo "==> ${OUT}/sunshine.ico"
+else
+  echo "/!\\ ImageMagick absent : sunshine.ico non généré (icône Windows)"
+fi
+
+# Icône macOS (.icns)
+if command -v png2icns >/dev/null; then
+  png2icns "${OUT}/sunshine.icns" "${OUT}"/sunshine-{16,32,128,256,512}.png >/dev/null
+  echo "==> ${OUT}/sunshine.icns"
+elif command -v iconutil >/dev/null; then
+  ICONSET="$(mktemp -d)/sunshine.iconset"
+  mkdir -p "${ICONSET}"
+  for s in 16 32 128 256 512; do
+    cp "${OUT}/sunshine-${s}.png" "${ICONSET}/icon_${s}x${s}.png"
+  done
+  iconutil -c icns "${ICONSET}" -o "${OUT}/sunshine.icns"
+  echo "==> ${OUT}/sunshine.icns"
+else
+  echo "/!\\ png2icns/iconutil absents : sunshine.icns non généré (icône macOS)"
+fi
+
 echo "==> Icônes générées dans ${OUT}"

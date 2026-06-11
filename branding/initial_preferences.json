@@ -1,0 +1,19 @@
+{
+  "homepage": "https://github.com/Horizon-Computers/Sunshine",
+  "homepage_is_newtabpage": true,
+  "browser": {
+    "show_home_button": true
+  },
+  "bookmark_bar": {
+    "show_on_all_tabs": false
+  },
+  "distribution": {
+    "import_bookmarks": false,
+    "import_history": false,
+    "import_search_engine": false,
+    "make_chrome_default": false,
+    "make_chrome_default_for_user": false,
+    "suppress_first_run_default_browser_prompt": true,
+    "verbose_logging": false
+  }
+}

@@ -1,0 +1,26 @@
+[Desktop Entry]
+Version=1.0
+Name=Sunshine
+GenericName=Web Browser
+GenericName[fr]=Navigateur Web
+Comment=Browse the web with Sunshine, a browser based on Brave
+Comment[fr]=Naviguez sur le web avec Sunshine, un navigateur basé sur Brave
+Exec=sunshine-browser %U
+StartupNotify=true
+StartupWMClass=sunshine-browser
+Terminal=false
+Icon=sunshine-browser
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=application/pdf;application/xhtml+xml;text/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+Name[fr]=Nouvelle fenêtre
+Exec=sunshine-browser
+
+[Desktop Action new-private-window]
+Name=New Private Window
+Name[fr]=Nouvelle fenêtre privée
+Exec=sunshine-browser --incognito

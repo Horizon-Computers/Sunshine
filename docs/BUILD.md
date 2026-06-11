@@ -46,7 +46,21 @@ npm run create_dist Release
 ```
 
 Le binaire de développement se lance avec `npm start Release` depuis
-`build/brave-browser`.
+`build/brave-browser`. Les cibles `make` équivalentes : `make icons init brand
+build dist` (voir `make help`).
+
+## Packaging
+
+- **Linux** : `branding/linux/sunshine-browser.desktop` est le lanceur à
+  installer dans `/usr/share/applications/`, avec les PNG de
+  `assets/logo/png/` dans `/usr/share/icons/hicolor/<taille>/apps/`.
+- **Premier lancement** : copier `branding/initial_preferences.json` sous le
+  nom `initial_preferences` à côté du binaire dans le paquet final pour
+  appliquer les réglages par défaut de Sunshine (page d'accueil, pas d'import,
+  pas de prompt « navigateur par défaut »).
+- **Windows/macOS** : `scripts/generate_icons.sh` produit `sunshine.ico` et
+  `sunshine.icns` ; `apply_branding.py` les installe dans brave-core avant le
+  build, ils sont donc intégrés aux exécutables.
 
 ## Publier une release
 

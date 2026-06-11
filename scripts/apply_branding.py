@@ -72,14 +72,22 @@ def rebrand_strings(brave_core: Path, product: str, dry_run: bool) -> int:
 ICON_SIZES = [16, 22, 24, 32, 48, 64, 128, 256]
 
 
-def replace_icons(brave_core: Path, dry_run: bool) -> None:
-    png_dir = ROOT / "assets" / "logo" / "png"
+def replace_icons(brave_core: Path, dry_run: bool, png_dir: Path | None = None) -> int:
+    """Remplace les icônes de Brave par celles de Sunshine.
+
+    - PNG : tous les app/theme/brave/**/product_logo_<taille>.png
+    - Windows : tous les app/**/*.ico nommés d'après Brave (sunshine.ico requis)
+    - macOS : tous les app/**/*.icns (sunshine.icns requis)
+    Retourne le nombre de fichiers remplacés.
+    """
+    if png_dir is None:
+        png_dir = ROOT / "assets" / "logo" / "png"
     if not png_dir.is_dir():
         print("/!\\ assets/logo/png/ absent — lancer scripts/generate_icons.sh "
               "d'abord. Icônes ignorées.")
-        return
-    theme_dir = brave_core / "app" / "theme" / "brave"
+        return 0
     replaced = 0
+    theme_dir = brave_core / "app" / "theme" / "brave"
     for size in ICON_SIZES:
         src = png_dir / f"sunshine-{size}.png"
         if not src.is_file():
@@ -88,7 +96,16 @@ def replace_icons(brave_core: Path, dry_run: bool) -> None:
             if not dry_run:
                 shutil.copyfile(src, dest)
             replaced += 1
-    print(f"==> Icônes : {replaced} fichier(s) product_logo_*.png remplacé(s)")
+    for src_name, pattern in (("sunshine.ico", "*.ico"), ("sunshine.icns", "*.icns")):
+        src = png_dir / src_name
+        if not src.is_file():
+            continue
+        for dest in (brave_core / "app").rglob(pattern):
+            if not dry_run:
+                shutil.copyfile(src, dest)
+            replaced += 1
+    print(f"==> Icônes : {replaced} fichier(s) remplacé(s)")
+    return replaced
 
 
 def apply_patches(brave_core: Path, dry_run: bool) -> None:

@@ -23,10 +23,16 @@ jobs:
           grep -qE '^BRAVE_VERSION=[0-9]+\.[0-9]+\.[0-9]+$' VERSION
           grep -qE '^CHROMIUM_VERSION=[0-9.]+$' VERSION
 
-      - name: Valider les SVG et générer les icônes
+      - name: Tests unitaires
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Valider les SVG et générer les icônes (PNG + ICO + ICNS)
         run: |
-          sudo apt-get update -q && sudo apt-get install -qy librsvg2-bin libxml2-utils
+          sudo apt-get update -q
+          sudo apt-get install -qy librsvg2-bin libxml2-utils imagemagick icnsutils desktop-file-utils
           xmllint --noout assets/logo/*.svg
+          desktop-file-validate branding/linux/sunshine-browser.desktop
+          python3 -c "import json; json.load(open('branding/initial_preferences.json'))"
           ./scripts/generate_icons.sh
 
       - name: Publier les icônes générées en artefact

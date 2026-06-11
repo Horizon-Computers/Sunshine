@@ -29,8 +29,11 @@ Les versions épinglées vivent dans le fichier [`VERSION`](VERSION).
 ├── scripts/
 │   ├── init.sh              # Clone brave-browser/brave-core à la version épinglée
 │   ├── apply_branding.py    # Applique le rebranding Sunshine sur brave-core
-│   ├── generate_icons.sh    # Génère les PNG d'icônes depuis le SVG
+│   ├── generate_icons.sh    # Génère PNG + ICO + ICNS depuis le SVG
+│   ├── make_patch.sh        # Exporte les modifs de brave-core en patch
+│   ├── bump_version.sh      # Bump de version Sunshine + changelog
 │   └── update_upstream.sh   # Met à jour la version Brave épinglée
+├── tests/                   # Tests unitaires (make test)
 ├── docs/BUILD.md            # Instructions de build détaillées
 └── .github/workflows/       # CI + veille des versions Brave + releases
 ```
