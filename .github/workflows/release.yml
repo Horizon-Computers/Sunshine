@@ -1,0 +1,48 @@
+# Publication d'une release Sunshine au push d'un tag v*.
+#
+# NOTE IMPORTANTE : la compilation complète d'un navigateur Chromium ne tient
+# pas sur les runners GitHub hébergés (limite de 6 h, ~14 Go de disque).
+# Ce workflow crée la release et y attache les binaires produits sur une
+# machine de build (self-hosted runner ou build local uploadé ensuite).
+# Voir docs/BUILD.md pour produire les binaires.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Générer les icônes
+        run: |
+          sudo apt-get update -q && sudo apt-get install -qy librsvg2-bin
+          ./scripts/generate_icons.sh
+          (cd assets/logo && zip -r ../../sunshine-icons.zip png sunshine-logo.svg sunshine-icon.svg)
+
+      - name: Préparer les notes de release
+        id: notes
+        run: |
+          source <(grep -E '^[A-Z_]+=' VERSION)
+          {
+            echo "## Sunshine ${GITHUB_REF_NAME}"
+            echo
+            echo "- Basé sur **Brave v${BRAVE_VERSION}** (Chromium ${CHROMIUM_VERSION})"
+            echo "- Instructions de build : voir \`docs/BUILD.md\`"
+            echo
+            echo "Les binaires (Windows/macOS/Linux) sont attachés à cette release"
+            echo "lorsqu'ils ont été produits sur la machine de build."
+          } > release-notes.md
+
+      - name: Créer la release GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release-notes.md
+          files: sunshine-icons.zip
+          draft: false

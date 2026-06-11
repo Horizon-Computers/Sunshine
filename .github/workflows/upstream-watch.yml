@@ -1,0 +1,51 @@
+# Veille des releases Brave : chaque jour, compare la dernière release de
+# brave/brave-browser à la version épinglée dans VERSION et ouvre une PR de
+# mise à jour si nécessaire.
+name: Upstream watch (Brave)
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-brave-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comparer avec la dernière release Brave
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          source <(grep -E '^[A-Z_]+=' VERSION)
+          LATEST="$(gh api repos/brave/brave-browser/releases/latest --jq .tag_name | tr -d v)"
+          echo "current=${BRAVE_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "latest=${LATEST}" >> "$GITHUB_OUTPUT"
+          if [ "${LATEST}" != "${BRAVE_VERSION}" ]; then
+            echo "update=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Mettre à jour VERSION
+        if: steps.check.outputs.update == 'true'
+        run: ./scripts/update_upstream.sh "${{ steps.check.outputs.latest }}"
+
+      - name: Ouvrir la pull request de mise à jour
+        if: steps.check.outputs.update == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: upstream/brave-${{ steps.check.outputs.latest }}
+          title: "Mise à jour Brave ${{ steps.check.outputs.current }} → ${{ steps.check.outputs.latest }}"
+          commit-message: "Bump Brave vers ${{ steps.check.outputs.latest }}"
+          body: |
+            Nouvelle release de Brave détectée : **v${{ steps.check.outputs.latest }}**
+            (version épinglée actuelle : v${{ steps.check.outputs.current }}).
+
+            Après merge :
+            1. bumper `SUNSHINE_VERSION` dans `VERSION` ;
+            2. pousser un tag `vX.Y.Z` pour déclencher la release Sunshine.
