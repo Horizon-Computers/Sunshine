@@ -51,9 +51,11 @@ build dist` (voir `make help`).
 
 ## Packaging
 
-- **Linux** : `branding/linux/sunshine-browser.desktop` est le lanceur à
-  installer dans `/usr/share/applications/`, avec les PNG de
-  `assets/logo/png/` dans `/usr/share/icons/hicolor/<taille>/apps/`.
+- **Linux** : `make package` (ou `./scripts/package_linux.sh`) construit
+  directement `dist/sunshine-browser_<version>_<arch>.deb` et une archive
+  portable `.tar.gz` depuis `out/Release` : binaire dans
+  `/opt/sunshine-browser/`, lanceur `.desktop`, icônes hicolor, lien
+  `/usr/bin/sunshine-browser`, `initial_preferences` et sommes SHA-256.
 - **Premier lancement** : copier `branding/initial_preferences.json` sous le
   nom `initial_preferences` à côté du binaire dans le paquet final pour
   appliquer les réglages par défaut de Sunshine (page d'accueil, pas d'import,

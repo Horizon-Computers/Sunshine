@@ -14,6 +14,11 @@ jobs:
       - name: Vérifier la syntaxe des scripts shell
         run: bash -n scripts/*.sh
 
+      - name: Shellcheck (erreurs uniquement)
+        run: |
+          sudo apt-get update -q && sudo apt-get install -qy shellcheck
+          shellcheck -S error scripts/*.sh
+
       - name: Vérifier la syntaxe Python
         run: python3 -m py_compile scripts/apply_branding.py
 
@@ -34,6 +39,18 @@ jobs:
           desktop-file-validate branding/linux/sunshine-browser.desktop
           python3 -c "import json; json.load(open('branding/initial_preferences.json'))"
           ./scripts/generate_icons.sh
+
+      - name: Test de bout en bout du packaging Linux (build factice)
+        run: |
+          mkdir -p /tmp/fake-out/Release/locales
+          printf '#!/bin/sh\necho stub\n' > /tmp/fake-out/Release/brave
+          chmod +x /tmp/fake-out/Release/brave
+          echo PAK > /tmp/fake-out/Release/resources.pak
+          echo ICU > /tmp/fake-out/Release/icudtl.dat
+          ./scripts/package_linux.sh /tmp/fake-out/Release
+          dpkg-deb --info dist/sunshine-browser_*.deb
+          dpkg-deb --contents dist/sunshine-browser_*.deb | grep -q usr/bin/sunshine-browser
+          tar -tzf dist/sunshine-browser-*-linux-*.tar.gz | grep -q sunshine-browser/initial_preferences
 
       - name: Publier les icônes générées en artefact
         uses: actions/upload-artifact@v4

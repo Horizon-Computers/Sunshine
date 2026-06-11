@@ -4,6 +4,9 @@
 # Icônes PNG générées depuis le SVG (reproduites par generate_icons.sh)
 /assets/logo/png/
 
+# Paquets produits par scripts/package_linux.sh
+/dist/
+
 # Divers
 *.pyc
 __pycache__/

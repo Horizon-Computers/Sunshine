@@ -19,8 +19,11 @@ brand: ## Applique le branding Sunshine sur brave-core
 build: ## Compile le navigateur en Release
 	cd build/brave-browser && npm run build Release
 
-dist: ## Crée les paquets d'installation
+dist: ## Crée les paquets d'installation (upstream create_dist)
 	cd build/brave-browser && npm run create_dist Release
+
+package: ## Construit le .deb et l'archive portable Linux depuis out/Release
+	./scripts/package_linux.sh
 
 test: ## Lance les tests unitaires
 	python3 -m unittest discover -s tests -v

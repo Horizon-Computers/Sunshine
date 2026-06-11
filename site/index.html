@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sunshine Browser — navigateur web basé sur Brave</title>
+  <meta name="description" content="Sunshine est un navigateur web open source pour Windows, macOS et Linux, basé sur Brave et Chromium.">
+  <link rel="icon" type="image/svg+xml" href="logo/sunshine-icon.svg">
+  <style>
+    :root {
+      --orange: #E8A23C;
+      --orange-dark: #C9842A;
+      --cream: #FFF8EE;
+      --ink: #3A2E1E;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--cream);
+      line-height: 1.6;
+    }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+    header { text-align: center; padding: 72px 0 48px; }
+    header img { width: min(480px, 90%); }
+    header p.tagline { font-size: 1.25rem; margin-top: 16px; color: var(--orange-dark); }
+    .cta { margin-top: 32px; }
+    .cta a {
+      display: inline-block; margin: 6px 8px; padding: 14px 28px;
+      border-radius: 10px; text-decoration: none; font-weight: 600;
+    }
+    .cta a.primary { background: var(--orange); color: #fff; }
+    .cta a.primary:hover { background: var(--orange-dark); }
+    .cta a.secondary { border: 2px solid var(--orange); color: var(--orange-dark); }
+    section { padding: 40px 0; }
+    h2 { color: var(--orange-dark); margin-bottom: 16px; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .card {
+      background: #fff; border-radius: 14px; padding: 22px;
+      box-shadow: 0 2px 10px rgba(58, 46, 30, 0.08);
+    }
+    .card h3 { color: var(--orange-dark); margin-bottom: 8px; font-size: 1.05rem; }
+    code { background: #f4ead9; padding: 2px 6px; border-radius: 5px; font-size: 0.9em; }
+    footer {
+      text-align: center; padding: 36px 0 48px; font-size: 0.9rem;
+      color: #8a7a62; border-top: 1px solid #eadfca; margin-top: 40px;
+    }
+    footer a { color: var(--orange-dark); }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <img src="logo/sunshine-wordmark.svg" alt="Sunshine Browser">
+    <p class="tagline">Le web, côté soleil. Un navigateur open source basé sur Brave.</p>
+    <div class="cta">
+      <a class="primary" href="https://github.com/Horizon-Computers/Sunshine/releases/latest">⬇ Télécharger</a>
+      <a class="secondary" href="https://github.com/Horizon-Computers/Sunshine">Code source</a>
+    </div>
+  </header>
+
+  <section class="wrap">
+    <h2>Pourquoi Sunshine ?</h2>
+    <div class="features">
+      <div class="card">
+        <h3>🛡 Moteur éprouvé</h3>
+        <p>Construit sur Brave et Chromium : blocage des traqueurs, performances
+        et compatibilité avec le web moderne, héritées de l'amont.</p>
+      </div>
+      <div class="card">
+        <h3>🔄 Toujours à jour</h3>
+        <p>Sunshine suit automatiquement les releases de Brave — chaque mise à
+        jour de sécurité du moteur est intégrée à la version suivante.</p>
+      </div>
+      <div class="card">
+        <h3>🔓 100 % open source</h3>
+        <p>Sous licence MPL-2.0, comme Brave. Scripts de build, branding et
+        patches : tout est public et reproductible.</p>
+      </div>
+      <div class="card">
+        <h3>💻 Multi-plateforme</h3>
+        <p>Windows, macOS et Linux (paquet <code>.deb</code> et archive
+        portable), avec intégration bureau complète.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2>Compiler soi-même</h2>
+    <p>Quatre commandes (machine costaude requise — voir
+    <a href="https://github.com/Horizon-Computers/Sunshine/blob/main/docs/BUILD.md">le guide de build</a>) :</p>
+    <p style="margin-top:12px"><code>./scripts/doctor.sh</code> →
+    <code>make init</code> → <code>make brand</code> → <code>make build</code></p>
+  </section>
+
+  <footer>
+    <p>© 2026 Horizon Computers — licence <a
+    href="https://github.com/Horizon-Computers/Sunshine/blob/main/LICENSE">MPL-2.0</a>.
+    Sunshine n'est pas affilié à Brave Software, Inc.</p>
+  </footer>
+</body>
+</html>

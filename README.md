@@ -7,6 +7,8 @@
 **Sunshine** est un navigateur web pour PC (Windows / macOS / Linux) basé sur
 [Brave](https://github.com/brave/brave-core), lui-même basé sur Chromium.
 
+🇬🇧 [English version](README.en.md) · 🌐 Site : `site/` (déployé via GitHub Pages)
+
 Ce dépôt est le dépôt « meta » du projet (sur le modèle de
 [`brave/brave-browser`](https://github.com/brave/brave-browser)) : il contient le
 branding, les scripts de synchronisation avec l'amont (upstream), les patches de

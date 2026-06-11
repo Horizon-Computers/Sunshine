@@ -21,6 +21,13 @@ Chaque release indique la version de Brave/Chromium embarquée.
 - Logo wordmark (`assets/logo/sunshine-wordmark.svg`) affiché en tête de
   README.
 - `SECURITY.md`, templates d'issues et de pull request.
+- `scripts/package_linux.sh` (+ `make package`) : construction du paquet
+  Debian (`.deb`) et de l'archive portable Linux avec lanceur, icônes,
+  `initial_preferences`, sandbox setuid et sommes SHA-256.
+- Site vitrine du projet (`site/`) déployé sur GitHub Pages
+  (`.github/workflows/pages.yml`).
+- `README.en.md` (version anglaise) ; CI : shellcheck + test de bout en bout
+  du packaging Linux sur un build factice.
 
 ## [1.0.0] - 2026-06-11 (Brave 1.91.171, Chromium 149.0.7827.103)
 
