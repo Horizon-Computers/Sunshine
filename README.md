@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo/sunshine-wordmark.svg" alt="Sunshine Browser" width="560">
+</p>
+
 # ☀️ Sunshine Browser
 
 **Sunshine** est un navigateur web pour PC (Windows / macOS / Linux) basé sur
@@ -45,6 +49,9 @@ Les versions épinglées vivent dans le fichier [`VERSION`](VERSION).
 > plusieurs heures de compilation. Voir [docs/BUILD.md](docs/BUILD.md).
 
 ```bash
+# 0. Vérifie que la machine est prête (disque, RAM, outils)
+./scripts/doctor.sh
+
 # 1. Récupère brave-browser + brave-core + Chromium à la version épinglée
 ./scripts/init.sh
 

@@ -16,6 +16,11 @@ Chaque release indique la version de Brave/Chromium embarquée.
 - `scripts/make_patch.sh` : export des modifications de brave-core en patch.
 - `scripts/bump_version.sh` : bump de version + section changelog + tag.
 - `Makefile` avec les cibles courantes (`make help`).
+- `scripts/doctor.sh` : diagnostic de la machine de build (disque, RAM,
+  outils) avant `init.sh`.
+- Logo wordmark (`assets/logo/sunshine-wordmark.svg`) affiché en tête de
+  README.
+- `SECURITY.md`, templates d'issues et de pull request.
 
 ## [1.0.0] - 2026-06-11 (Brave 1.91.171, Chromium 149.0.7827.103)
 
