@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <title>Sunshine Browser — logo v1</title>
+  <desc>Soleil levant orange sur l'horizon, tracé style dessin à main levée.</desc>
+  <g fill="none" stroke="#E8A23C" stroke-linecap="round">
+    <!-- disque du soleil (demi-cercle) -->
+    <path d="M 330 510 C 322 360 420 230 565 222 C 715 214 808 348 802 502"
+          stroke-width="17"/>
+    <!-- rayons -->
+    <path d="M 590 95  L 596 175" stroke-width="15"/>
+    <path d="M 305 155 L 398 252" stroke-width="15"/>
+    <path d="M 778 290 Q 830 268 872 258" stroke-width="14"/>
+    <path d="M 105 345 L 255 412" stroke-width="14"/>
+    <path d="M 850 392 L 920 388" stroke-width="13"/>
+    <!-- horizon : double trait croisé façon esquisse -->
+    <path d="M 330 510 Q 660 488 1015 502 L 1015 502 Q 700 506 150 538
+             Q 560 568 962 610 Q 520 622 110 638"
+          stroke-width="8" stroke-linejoin="round"/>
+  </g>
+</svg>

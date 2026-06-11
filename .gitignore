@@ -1,0 +1,11 @@
+# Sources Brave/Chromium téléchargées par scripts/init.sh (~70 Go)
+/build/
+
+# Icônes PNG générées depuis le SVG (reproduites par generate_icons.sh)
+/assets/logo/png/
+
+# Divers
+*.pyc
+__pycache__/
+.DS_Store
+node_modules/

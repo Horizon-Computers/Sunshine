@@ -1,0 +1,13 @@
+# Constantes de marque Sunshine.
+# Lues par scripts/apply_branding.py (format clé=valeur).
+
+PRODUCT_NAME=Sunshine
+PRODUCT_NAME_LOWER=sunshine
+COMPANY_NAME=Horizon Computers
+COMPANY_SHORT_NAME=Horizon
+COPYRIGHT_HOLDER=Horizon Computers
+MAC_BUNDLE_ID=com.horizoncomputers.sunshine
+LINUX_PACKAGE=sunshine-browser
+WIN_APP_USER_MODEL_ID=HorizonComputers.Sunshine
+PRIMARY_COLOR=#E8A23C
+HOMEPAGE=https://github.com/Horizon-Computers/Sunshine
