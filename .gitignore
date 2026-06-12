@@ -4,8 +4,11 @@
 # Icônes PNG générées depuis le SVG (reproduites par generate_icons.sh)
 /assets/logo/png/
 
-# Paquets produits par scripts/package_linux.sh
+# Paquets produits par scripts/package_linux.sh / package_windows.sh
 /dist/
+
+# Dépôt APT généré par scripts/make_apt_repo.sh
+/apt/
 
 # Artefacts de personnalisation (reproduits par make customize)
 /customize/generated/

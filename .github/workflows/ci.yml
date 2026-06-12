@@ -78,6 +78,27 @@ jobs:
           sunshine-browser --user-flag | grep -q -- "--ci-test-flag --user-flag"
           sudo dpkg -r sunshine-browser
 
+      - name: Test du dépôt APT (génération + résolution apt)
+        run: |
+          ./scripts/make_apt_repo.sh
+          echo "deb [trusted=yes] file:$(pwd)/apt stable main" \
+            | sudo tee /etc/apt/sources.list.d/sunshine-test.list
+          sudo apt-get update -o Dir::Etc::SourceList=/etc/apt/sources.list.d/sunshine-test.list \
+                              -o Dir::Etc::SourceParts=/dev/null
+          apt-cache policy sunshine-browser | grep -q "Candidate: $(grep SUNSHINE_VERSION VERSION | cut -d= -f2)"
+          sudo rm /etc/apt/sources.list.d/sunshine-test.list
+
+      - name: Test du packaging Windows (build factice)
+        run: |
+          mkdir -p /tmp/win-out/Release/locales
+          printf 'MZ' > /tmp/win-out/Release/brave.exe
+          printf 'DLL' > /tmp/win-out/Release/chrome_elf.dll
+          echo PAK > /tmp/win-out/Release/resources.pak
+          ./scripts/package_windows.sh /tmp/win-out/Release
+          unzip -l dist/sunshine-browser-*-windows-x64.zip | grep -q Sunshine/sunshine.exe
+          unzip -l dist/sunshine-browser-*-windows-x64.zip | grep -q Sunshine/extensions/sunshine-assistant/manifest.json
+          grep -q "AppVersion=$(grep SUNSHINE_VERSION VERSION | cut -d= -f2)" dist/sunshine-setup.iss
+
       - name: Publier les icônes générées en artefact
         uses: actions/upload-artifact@v4
         with:

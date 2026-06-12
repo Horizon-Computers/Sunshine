@@ -28,6 +28,12 @@ dist: ## Crée les paquets d'installation (upstream create_dist)
 package: ## Construit le .deb et l'archive portable Linux depuis out/Release
 	./scripts/package_linux.sh
 
+package-windows: ## Construit le zip portable Windows + script Inno Setup
+	./scripts/package_windows.sh
+
+apt-repo: ## Génère le dépôt APT (apt/) à partir des .deb de dist/
+	./scripts/make_apt_repo.sh
+
 test: ## Lance les tests unitaires (Python + JavaScript)
 	python3 -m unittest discover -s tests -v
 	node --test tests/js/test_assistant.mjs

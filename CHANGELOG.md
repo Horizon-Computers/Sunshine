@@ -43,6 +43,13 @@ Chaque release indique la version de Brave/Chromium embarquée.
   page courante, chat libre avec historique, réponses en streaming, réglages
   intégrés avec test de connexion. Embarqué dans le paquet Linux. 12 tests
   JavaScript (`node --test`) en CI. Docs : `docs/ASSISTANT.md`.
+- Distribution multi-plateforme (`docs/DISTRIBUTION.md`) :
+  `scripts/package_windows.sh` (zip portable Windows avec `sunshine.exe`,
+  personnalisation et extensions + script Inno Setup généré : raccourcis,
+  associations http/https, désinstalleur) et `scripts/make_apt_repo.sh`
+  (dépôt APT statique signable par GPG pour les mises à jour `apt upgrade`,
+  hébergeable sur GitHub Pages). Les deux validés de bout en bout en CI,
+  y compris la résolution réelle du paquet par apt.
 
 ## [1.0.0] - 2026-06-11 (Brave 1.91.171, Chromium 149.0.7827.103)
 
