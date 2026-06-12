@@ -31,6 +31,7 @@ Les versions épinglées vivent dans le fichier [`VERSION`](VERSION).
 ├── VERSION                  # Versions épinglées (Sunshine / Brave / Chromium)
 ├── assets/logo/             # Logo Sunshine (source SVG)
 ├── branding/                # Constantes de marque (nom, identifiants, couleurs)
+├── customize/sunshine.toml  # Personnalisation du navigateur (voir docs/CUSTOMIZE.md)
 ├── patches/                 # Patches appliqués sur brave-core après checkout
 ├── scripts/
 │   ├── init.sh              # Clone brave-browser/brave-core à la version épinglée
@@ -79,6 +80,14 @@ Pour mettre à jour manuellement :
 ./scripts/update_upstream.sh          # récupère la dernière version de Brave
 ./scripts/update_upstream.sh 1.92.50  # ou une version précise
 ```
+
+## 🎨 Personnalisation
+
+Page d'accueil, couleurs du thème, favoris préinstallés, vie privée
+(télémétrie, Rewards/Wallet/VPN), drapeaux de lancement : tout se règle dans
+[`customize/sunshine.toml`](customize/sunshine.toml) puis `make customize`.
+Par défaut, Sunshine est « le moteur de Brave sans la couche crypto ».
+Voir [docs/CUSTOMIZE.md](docs/CUSTOMIZE.md).
 
 ## 🖼 Logo
 

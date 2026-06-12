@@ -7,6 +7,9 @@
 # Paquets produits par scripts/package_linux.sh
 /dist/
 
+# Artefacts de personnalisation (reproduits par make customize)
+/customize/generated/
+
 # Divers
 *.pyc
 __pycache__/

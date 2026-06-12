@@ -65,11 +65,50 @@ if [[ -e "${STAGE}/${INSTALL_DIR}/chrome-sandbox" ]]; then
 fi
 
 echo "==> Branding et intégration bureau…"
-install -m 644 "${ROOT}/branding/initial_preferences.json" \
-  "${STAGE}/${INSTALL_DIR}/initial_preferences"
+# Personnalisation : artefacts générés par `make customize` si présents,
+# sinon les valeurs de base du branding.
+GEN="${ROOT}/customize/generated"
+if [[ -f "${GEN}/initial_preferences.json" ]]; then
+  install -m 644 "${GEN}/initial_preferences.json" \
+    "${STAGE}/${INSTALL_DIR}/initial_preferences"
+else
+  echo "/!\\ customize/generated absent (lancer make customize) : préférences de base"
+  install -m 644 "${ROOT}/branding/initial_preferences.json" \
+    "${STAGE}/${INSTALL_DIR}/initial_preferences"
+fi
+if [[ -f "${GEN}/initial_bookmarks.html" ]]; then
+  install -m 644 "${GEN}/initial_bookmarks.html" \
+    "${STAGE}/${INSTALL_DIR}/initial_bookmarks.html"
+fi
+if [[ -d "${GEN}/theme" ]]; then
+  mkdir -p "${STAGE}/${INSTALL_DIR}/extensions"
+  cp -a "${GEN}/theme" "${STAGE}/${INSTALL_DIR}/extensions/sunshine-theme"
+fi
+if [[ -f "${GEN}/policies.json" ]]; then
+  mkdir -p "${STAGE}/etc/${PKG}/policies/managed"
+  install -m 644 "${GEN}/policies.json" \
+    "${STAGE}/etc/${PKG}/policies/managed/sunshine.json"
+fi
+mkdir -p "${STAGE}/etc/${PKG}"
+if [[ -f "${GEN}/flags.conf" ]]; then
+  install -m 644 "${GEN}/flags.conf" "${STAGE}/etc/${PKG}/flags.conf"
+fi
+
 install -m 644 "${ROOT}/branding/linux/${PKG}.desktop" \
   "${STAGE}/usr/share/applications/${PKG}.desktop"
-ln -s "/${INSTALL_DIR}/${PKG}" "${STAGE}/usr/bin/${PKG}"
+
+# Lanceur : applique les drapeaux de /etc/<pkg>/flags.conf puis exec le binaire.
+cat > "${STAGE}/usr/bin/${PKG}" <<EOF
+#!/bin/sh
+# Lanceur Sunshine — drapeaux configurables dans /etc/${PKG}/flags.conf
+FLAGS=""
+if [ -r "/etc/${PKG}/flags.conf" ]; then
+  FLAGS="\$(grep -v '^[[:space:]]*#' "/etc/${PKG}/flags.conf" | tr '\\n' ' ')"
+fi
+# shellcheck disable=SC2086
+exec "/${INSTALL_DIR}/${PKG}" \${FLAGS} "\$@"
+EOF
+chmod 755 "${STAGE}/usr/bin/${PKG}"
 
 if [[ -d "${ROOT}/assets/logo/png" ]]; then
   for png in "${ROOT}"/assets/logo/png/sunshine-*.png; do

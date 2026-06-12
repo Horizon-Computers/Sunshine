@@ -40,17 +40,36 @@ jobs:
           python3 -c "import json; json.load(open('branding/initial_preferences.json'))"
           ./scripts/generate_icons.sh
 
-      - name: Test de bout en bout du packaging Linux (build factice)
+      - name: Générer la personnalisation
+        run: |
+          python3 scripts/customize.py
+          python3 -c "import json; json.load(open('customize/generated/theme/manifest.json'))"
+
+      - name: Test de bout en bout du packaging Linux (build factice + personnalisation)
         run: |
           mkdir -p /tmp/fake-out/Release/locales
-          printf '#!/bin/sh\necho stub\n' > /tmp/fake-out/Release/brave
+          printf '#!/bin/sh\necho "STUB $@"\n' > /tmp/fake-out/Release/brave
           chmod +x /tmp/fake-out/Release/brave
           echo PAK > /tmp/fake-out/Release/resources.pak
           echo ICU > /tmp/fake-out/Release/icudtl.dat
           ./scripts/package_linux.sh /tmp/fake-out/Release
           dpkg-deb --info dist/sunshine-browser_*.deb
-          dpkg-deb --contents dist/sunshine-browser_*.deb | grep -q usr/bin/sunshine-browser
+          CONTENTS="$(dpkg-deb --contents dist/sunshine-browser_*.deb)"
+          for path in usr/bin/sunshine-browser \
+                      opt/sunshine-browser/initial_bookmarks.html \
+                      opt/sunshine-browser/extensions/sunshine-theme/manifest.json \
+                      etc/sunshine-browser/policies/managed/sunshine.json \
+                      etc/sunshine-browser/flags.conf; do
+            echo "${CONTENTS}" | grep -q "${path}"
+          done
           tar -tzf dist/sunshine-browser-*-linux-*.tar.gz | grep -q sunshine-browser/initial_preferences
+
+      - name: Test d'installation réelle du .deb (lanceur + drapeaux)
+        run: |
+          sudo dpkg -i --force-depends dist/sunshine-browser_*.deb
+          echo "--ci-test-flag" | sudo tee -a /etc/sunshine-browser/flags.conf
+          sunshine-browser --user-flag | grep -q -- "--ci-test-flag --user-flag"
+          sudo dpkg -r sunshine-browser
 
       - name: Publier les icônes générées en artefact
         uses: actions/upload-artifact@v4

@@ -10,6 +10,9 @@ help: ## Affiche cette aide
 icons: ## Génère les PNG/ICO/ICNS depuis le SVG
 	./scripts/generate_icons.sh
 
+customize: ## Génère la personnalisation depuis customize/sunshine.toml
+	python3 scripts/customize.py
+
 init: ## Télécharge brave-browser + brave-core + Chromium (long, ~70 Go)
 	./scripts/init.sh
 
@@ -30,7 +33,7 @@ test: ## Lance les tests unitaires
 
 check: ## Vérifie la syntaxe des scripts et le fichier VERSION
 	bash -n scripts/*.sh
-	python3 -m py_compile scripts/apply_branding.py
+	python3 -m py_compile scripts/apply_branding.py scripts/customize.py
 	grep -qE '^SUNSHINE_VERSION=[0-9]+\.[0-9]+\.[0-9]+$$' VERSION
 	grep -qE '^BRAVE_VERSION=[0-9]+\.[0-9]+\.[0-9]+$$' VERSION
 	python3 -m unittest discover -s tests

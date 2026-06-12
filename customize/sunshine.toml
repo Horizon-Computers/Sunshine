@@ -1,0 +1,54 @@
+# ============================================================
+#  Personnalisation de Sunshine — fichier de configuration
+# ============================================================
+# Source de vérité unique de la personnalisation du navigateur.
+# Générer les artefacts :  make customize
+# Détails et documentation : docs/CUSTOMIZE.md
+
+[startup]
+# Page d'accueil (bouton ⌂ et ouverture du navigateur).
+homepage = "https://github.com/Horizon-Computers/Sunshine"
+# true : le nouvel onglet sert de page d'accueil au lieu de l'URL ci-dessus.
+homepage_is_newtabpage = false
+# true : rouvrir les onglets de la session précédente au démarrage.
+restore_session = false
+show_home_button = true
+show_bookmark_bar = true
+
+[appearance]
+# Thème Sunshine (généré sous forme d'extension de thème Chromium).
+# Couleurs au format hexadécimal #RRGGBB.
+frame = "#E8A23C"                # cadre de la fenêtre
+toolbar = "#FFF8EE"              # barre d'outils
+tab_text = "#3A2E1E"             # texte de l'onglet actif
+tab_background_text = "#6B5536"  # texte des onglets inactifs
+ntp_background = "#FFF8EE"       # fond du nouvel onglet
+ntp_text = "#3A2E1E"             # texte du nouvel onglet
+accent = "#E8A23C"               # boutons / surlignage
+# Fond d'écran du nouvel onglet : chemin d'un PNG, ou "" pour couleur unie.
+ntp_wallpaper = ""
+
+[privacy]
+# Réglages par défaut respectueux de la vie privée.
+do_not_track = true
+metrics_reporting = false        # télémétrie moteur désactivée
+# Sunshine = le moteur de Brave sans la couche crypto :
+disable_brave_rewards = true
+disable_brave_wallet = true
+disable_brave_vpn = true
+disable_tor = false              # fenêtres privées Tor conservées
+
+[bookmarks]
+# Favoris préinstallés au premier lancement (barre de favoris).
+items = [
+  { name = "Sunshine Browser", url = "https://github.com/Horizon-Computers/Sunshine" },
+  { name = "Horizon Computers", url = "https://horizoncomputers.netlify.app" },
+]
+
+[flags]
+# Drapeaux de ligne de commande ajoutés au lancement (un par entrée).
+# Lus depuis /etc/sunshine-browser/flags.conf par le lanceur installé.
+switches = [
+  # "--force-dark-mode",
+  # "--disable-smooth-scrolling",
+]

@@ -28,6 +28,14 @@ Chaque release indique la version de Brave/Chromium embarquée.
   (`.github/workflows/pages.yml`).
 - `README.en.md` (version anglaise) ; CI : shellcheck + test de bout en bout
   du packaging Linux sur un build factice.
+- **Système de personnalisation complet** piloté par `customize/sunshine.toml`
+  (`make customize`, voir `docs/CUSTOMIZE.md`) : page d'accueil et démarrage,
+  thème couleurs/fond d'écran (extension de thème Chromium), favoris
+  préinstallés, politiques de vie privée (télémétrie, Rewards/Wallet/VPN/Tor),
+  drapeaux de lancement éditables dans `/etc/sunshine-browser/flags.conf`.
+  Le paquet Linux embarque le tout ; le lanceur `/usr/bin/sunshine-browser`
+  devient un script qui applique les drapeaux. 13 tests unitaires dédiés +
+  test d'installation réelle du `.deb` en CI.
 
 ## [1.0.0] - 2026-06-11 (Brave 1.91.171, Chromium 149.0.7827.103)
 
