@@ -1,0 +1,24 @@
+{
+  "focusDesc": { "message": "Sunshine's anti-infinite-scroll: a pause after N screens, time-spent reminders, hides Shorts/Reels/trends." },
+  "title": { "message": "🧘 Sunshine Focus" },
+  "enable": { "message": "Enable Sunshine Focus" },
+  "pauseEvery": { "message": "Pause every" },
+  "screensSuffix": { "message": "screens" },
+  "remindEvery": { "message": "Remind every" },
+  "minutesSuffix": { "message": "minutes" },
+  "zeroOff": { "message": "0 = disabled" },
+  "hideShorts": { "message": "Hide Shorts / Reels / trends" },
+  "sites": { "message": "Watched sites (one per line)" },
+  "save": { "message": "Save" },
+  "saved": { "message": "✓ saved" },
+  "btnTop": { "message": "Back to top" },
+  "btnContinue": { "message": "Keep scrolling" },
+  "scrollMsg": {
+    "message": "You've scrolled the equivalent of $screens$ screens. Still finding what you were looking for?",
+    "placeholders": { "screens": { "content": "$1" } }
+  },
+  "reminderMsg": {
+    "message": "You've been on this site for $minutes$ minute(s). Maybe time for a break?",
+    "placeholders": { "minutes": { "content": "$1" } }
+  }
+}

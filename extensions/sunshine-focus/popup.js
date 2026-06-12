@@ -2,6 +2,14 @@
 import { DEFAULT_FOCUS_SETTINGS } from "./lib.js";
 
 const $ = (sel) => document.querySelector(sel);
+const t = (key) => chrome.i18n.getMessage(key) || key;
+
+function applyI18n() {
+  for (const el of document.querySelectorAll("[data-i18n]")) {
+    const msg = chrome.i18n.getMessage(el.dataset.i18n);
+    if (msg) el.textContent = msg;
+  }
+}
 
 async function load() {
   const stored = await chrome.storage.local.get("focusSettings");
@@ -24,9 +32,10 @@ async function save() {
       .filter(Boolean),
   };
   await chrome.storage.local.set({ focusSettings });
-  $("#status").textContent = "✓ enregistré";
+  $("#status").textContent = t("saved");
   setTimeout(() => { $("#status").textContent = ""; }, 1500);
 }
 
 $("#save").addEventListener("click", save);
+applyI18n();
 load();

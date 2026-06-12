@@ -7,6 +7,26 @@ const messagesEl = $("#messages");
 const inputEl = $("#input");
 const sendEl = $("#send");
 
+// ---------- i18n ----------
+
+// Texte traduit ; le contenu FR du HTML sert de repli.
+const t = (key, subs) => chrome.i18n.getMessage(key, subs) || key;
+
+function applyI18n() {
+  for (const el of document.querySelectorAll("[data-i18n]")) {
+    const msg = chrome.i18n.getMessage(el.dataset.i18n);
+    if (msg) el.textContent = msg;
+  }
+  for (const el of document.querySelectorAll("[data-i18n-title]")) {
+    const msg = chrome.i18n.getMessage(el.dataset.i18nTitle);
+    if (msg) el.title = msg;
+  }
+  for (const el of document.querySelectorAll("[data-i18n-placeholder]")) {
+    const msg = chrome.i18n.getMessage(el.dataset.i18nPlaceholder);
+    if (msg) el.placeholder = msg;
+  }
+}
+
 let settings = { ...DEFAULT_SETTINGS };
 let history = [];   // [{role, content}] — mémoire de la conversation
 let busy = false;
@@ -37,17 +57,17 @@ function readSettingsForm() {
 async function saveSettings() {
   settings = readSettingsForm();
   await chrome.storage.local.set({ settings });
-  setStatus("Réglages enregistrés ✓", false);
+  setStatus(t("statusSaved"), false);
 }
 
 async function testConnection() {
-  setStatus("Test en cours…", false);
+  setStatus(t("statusTesting"), false);
   try {
     const probe = readSettingsForm();
     await streamChat(probe, buildMessages("Réponds uniquement : ok"), () => {});
-    setStatus("Connexion réussie ✓", false);
+    setStatus(t("statusOk"), false);
   } catch (err) {
-    setStatus(`Échec : ${err.message}`, true);
+    setStatus(t("statusFail", [err.message]), true);
   }
 }
 
@@ -110,9 +130,7 @@ async function ask(question) {
   const usePage = $("#use-page").checked;
   const page = usePage ? await getPageContext() : null;
   if (usePage && !page) {
-    addMessage("error",
-      "Impossible de lire la page courante (page interne ou protégée) — " +
-      "réponse sans contexte de page.");
+    addMessage("error", t("errPage"));
   }
 
   const bubble = addMessage("assistant");
@@ -128,12 +146,9 @@ async function ask(question) {
     if (history.length > 12) history = history.slice(-12);
   } catch (err) {
     bubble.remove();
-    const help = settings.backend === "ollama"
-      ? " Vérifie qu'Ollama tourne (`ollama serve`) et que le modèle est " +
-        "installé (`ollama pull mistral:7b`), ou configure l'API Mistral " +
-        "dans ⚙."
-      : " Vérifie ta clé d'API Mistral dans ⚙.";
-    addMessage("error", `${err.message}.${help}`);
+    const help = settings.backend === "ollama" ? t("helpOllama")
+                                               : t("helpMistral");
+    addMessage("error", `${err.message}. ${help}`);
   } finally {
     bubble.classList.remove("pending");
     busy = false;
@@ -154,11 +169,7 @@ async function consumePendingSelection() {
 }
 
 function greet() {
-  addMessage("assistant",
-    "Bonjour ! Je suis Sunshine Assistant (Mistral 7B). Pose-moi une " +
-    "question sur la page courante, sélectionne du texte puis clic droit → " +
-    "« Demander à Sunshine Assistant », ou utilise les boutons ci-dessus. " +
-    "Configure le backend dans ⚙ (Ollama local par défaut).");
+  addMessage("assistant", t("greeting"));
 }
 
 function resetConversation() {
@@ -171,6 +182,7 @@ function resetConversation() {
 // ---------- Branchements ----------
 
 async function init() {
+  applyI18n();
   await loadSettings();
 
   $("#settings-toggle").addEventListener("click", () => {
@@ -183,7 +195,7 @@ async function init() {
   for (const btn of document.querySelectorAll("#quick-actions button")) {
     btn.addEventListener("click", () => {
       $("#use-page").checked = true;
-      ask(btn.dataset.prompt);
+      ask(t(btn.dataset.promptKey));
     });
   }
 

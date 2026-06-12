@@ -47,12 +47,18 @@
         <div class="card">
           <div class="sun">☀️</div>
           <p></p>
-          <button class="primary">Remonter en haut</button>
-          <button class="ghost">Continuer</button>
+          <button class="primary"></button>
+          <button class="ghost"></button>
         </div>
       </div>`;
     shadow.querySelector("p").textContent = message;
-    shadow.querySelector(".primary").addEventListener("click", () => {
+    const primary = shadow.querySelector(".primary");
+    const ghost = shadow.querySelector(".ghost");
+    primary.textContent =
+      chrome.i18n.getMessage("btnTop") || "Remonter en haut";
+    ghost.textContent =
+      chrome.i18n.getMessage("btnContinue") || "Continuer";
+    primary.addEventListener("click", () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
       close();
     });
@@ -74,7 +80,8 @@
       const screens = lib.screensScrolled(scrollY, innerHeight);
       if (lib.shouldWarn(screens, cfg.screensBudget, lastWarnedScreens)) {
         lastWarnedScreens = screens;
-        showBreak(lib.scrollMessage(screens));
+        showBreak(chrome.i18n.getMessage("scrollMsg", [String(screens)])
+                  || lib.scrollMessage(screens));
       }
     }, 400);
   }, { passive: true });
@@ -87,7 +94,9 @@
       if (document.visibilityState !== "visible") return;
       visibleSeconds += TICK;
       if (visibleSeconds % (cfg.reminderMinutes * 60) === 0) {
-        showBreak(lib.reminderMessage(Math.round(visibleSeconds / 60)));
+        const minutes = Math.round(visibleSeconds / 60);
+        showBreak(chrome.i18n.getMessage("reminderMsg", [String(minutes)])
+                  || lib.reminderMessage(minutes));
       }
     }, TICK * 1000);
   }

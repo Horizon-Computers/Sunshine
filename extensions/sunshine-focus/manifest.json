@@ -2,7 +2,8 @@
   "manifest_version": 3,
   "name": "Sunshine Focus",
   "version": "1.0.0",
-  "description": "Anti-défilement infini de Sunshine : pause après N écrans, rappel du temps passé, masquage des Shorts/Reels/tendances.",
+  "description": "__MSG_focusDesc__",
+  "default_locale": "fr",
   "permissions": ["storage"],
   "content_scripts": [
     {

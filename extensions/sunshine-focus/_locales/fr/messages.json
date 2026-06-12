@@ -1,0 +1,24 @@
+{
+  "focusDesc": { "message": "Anti-défilement infini de Sunshine : pause après N écrans, rappel du temps passé, masquage des Shorts/Reels/tendances." },
+  "title": { "message": "🧘 Sunshine Focus" },
+  "enable": { "message": "Activer Sunshine Focus" },
+  "pauseEvery": { "message": "Pause tous les" },
+  "screensSuffix": { "message": "écrans" },
+  "remindEvery": { "message": "Rappel toutes les" },
+  "minutesSuffix": { "message": "minutes" },
+  "zeroOff": { "message": "0 = désactivé" },
+  "hideShorts": { "message": "Masquer Shorts / Reels / tendances" },
+  "sites": { "message": "Sites surveillés (un par ligne)" },
+  "save": { "message": "Enregistrer" },
+  "saved": { "message": "✓ enregistré" },
+  "btnTop": { "message": "Remonter en haut" },
+  "btnContinue": { "message": "Continuer" },
+  "scrollMsg": {
+    "message": "Tu as fait défiler l'équivalent de $screens$ écrans. Tu y trouves encore ce que tu cherchais ?",
+    "placeholders": { "screens": { "content": "$1" } }
+  },
+  "reminderMsg": {
+    "message": "Cela fait $minutes$ minute(s) que tu es sur ce site. C'est peut-être le moment d'une pause ?",
+    "placeholders": { "minutes": { "content": "$1" } }
+  }
+}

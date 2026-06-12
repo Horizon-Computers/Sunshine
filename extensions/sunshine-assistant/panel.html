@@ -9,59 +9,61 @@
   <header>
     <h1>☀️ Sunshine Assistant</h1>
     <div>
-      <button id="new-chat" title="Nouvelle conversation">🗨+</button>
-      <button id="settings-toggle" title="Réglages">⚙</button>
+      <button id="new-chat" data-i18n-title="newChat" title="Nouvelle conversation">🗨+</button>
+      <button id="settings-toggle" data-i18n-title="settings" title="Réglages">⚙</button>
     </div>
   </header>
 
   <section id="settings" hidden>
-    <h2>Backend Mistral 7B</h2>
+    <h2 data-i18n="settingsTitle">Backend Mistral 7B</h2>
     <label class="radio">
       <input type="radio" name="backend" value="ollama" checked>
-      Ollama local (privé, gratuit)
+      <span data-i18n="backendOllama">Ollama local (privé, gratuit)</span>
     </label>
     <div class="field" data-backend="ollama">
-      <label>URL d'Ollama
+      <label><span data-i18n="ollamaUrl">URL d'Ollama</span>
         <input id="ollama-url" type="text" placeholder="http://localhost:11434">
       </label>
-      <label>Modèle
+      <label><span data-i18n="model">Modèle</span>
         <input id="ollama-model" type="text" placeholder="mistral:7b">
       </label>
     </div>
     <label class="radio">
       <input type="radio" name="backend" value="mistral">
-      API Mistral AI (cloud, clé requise)
+      <span data-i18n="backendMistral">API Mistral AI (cloud, clé requise)</span>
     </label>
     <div class="field" data-backend="mistral">
-      <label>Clé d'API
-        <input id="mistral-key" type="password" placeholder="clé api.mistral.ai">
+      <label><span data-i18n="apiKey">Clé d'API</span>
+        <input id="mistral-key" type="password" data-i18n-placeholder="apiKeyPlaceholder" placeholder="clé api.mistral.ai">
       </label>
-      <label>Modèle
+      <label><span data-i18n="model">Modèle</span>
         <input id="mistral-model" type="text" placeholder="open-mistral-7b">
       </label>
     </div>
     <div class="settings-actions">
-      <button id="settings-save">Enregistrer</button>
-      <button id="settings-test">Tester la connexion</button>
+      <button id="settings-save" data-i18n="save">Enregistrer</button>
+      <button id="settings-test" data-i18n="test">Tester la connexion</button>
     </div>
     <p id="settings-status"></p>
   </section>
 
   <section id="quick-actions">
-    <button data-prompt="Résume cette page en quelques phrases.">📝 Résumer</button>
-    <button data-prompt="Donne les points clés de cette page sous forme de liste.">🔑 Points clés</button>
-    <button data-prompt="Traduis le contenu principal de cette page en français.">🌐 Traduire</button>
-    <button data-prompt="Explique le contenu de cette page simplement, comme à un débutant.">💡 Expliquer</button>
+    <button data-prompt-key="promptSummarize" data-i18n="qaSummarize">📝 Résumer</button>
+    <button data-prompt-key="promptKeypoints" data-i18n="qaKeypoints">🔑 Points clés</button>
+    <button data-prompt-key="promptTranslate" data-i18n="qaTranslate">🌐 Traduire</button>
+    <button data-prompt-key="promptExplain" data-i18n="qaExplain">💡 Expliquer</button>
   </section>
 
   <main id="messages" aria-live="polite"></main>
 
   <footer>
-    <label id="context-toggle" title="Joindre le contenu de l'onglet actif à la question">
-      <input type="checkbox" id="use-page" checked> 📄 Page courante
+    <label id="context-toggle" data-i18n-title="usePageTitle"
+           title="Joindre le contenu de l'onglet actif à la question">
+      <input type="checkbox" id="use-page" checked>
+      <span data-i18n="usePage">📄 Page courante</span>
     </label>
     <div id="composer">
-      <textarea id="input" rows="2"
+      <textarea id="input" rows="2" data-i18n-placeholder="inputPlaceholder"
         placeholder="Pose une question sur la page ou sur le web…"></textarea>
       <button id="send" title="Envoyer">➤</button>
     </div>

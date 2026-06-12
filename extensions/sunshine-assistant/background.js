@@ -9,7 +9,7 @@ chrome.sidePanel
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "ask-sunshine",
-    title: "Demander à Sunshine Assistant",
+    title: chrome.i18n.getMessage("contextMenu") || "Demander à Sunshine Assistant",
     contexts: ["selection"],
   });
 });

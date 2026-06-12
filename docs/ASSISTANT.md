@@ -66,6 +66,13 @@ brave-core d'installation automatique : `brave://extensions` → mode
 développeur → « Charger l'extension non empaquetée » → ce dossier. Elle est
 aussi testable telle quelle dans Brave/Chromium depuis le dépôt.
 
+## Langues
+
+L'interface est disponible en **français** (défaut) et **anglais**, suivant
+la langue du navigateur (`_locales/`). Les actions rapides s'adaptent
+(« Traduire » cible la langue de l'utilisateur) et le modèle répond dans la
+langue de la question.
+
 ## Tests
 
 `tests/js/test_assistant.mjs` (exécutés par `make test` et la CI) couvrent le

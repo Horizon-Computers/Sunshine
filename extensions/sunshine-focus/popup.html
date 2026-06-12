@@ -22,22 +22,25 @@
   </style>
 </head>
 <body>
-  <h1>🧘 Sunshine Focus</h1>
-  <label><input type="checkbox" id="enabled"> Activer Sunshine Focus</label>
-  <label>Pause tous les
-    <input type="number" id="screens" class="num" min="0" max="100"> écrans
-    <div class="hint">0 = désactivé</div>
+  <h1 data-i18n="title">🧘 Sunshine Focus</h1>
+  <label><input type="checkbox" id="enabled">
+    <span data-i18n="enable">Activer Sunshine Focus</span></label>
+  <label><span data-i18n="pauseEvery">Pause tous les</span>
+    <input type="number" id="screens" class="num" min="0" max="100">
+    <span data-i18n="screensSuffix">écrans</span>
+    <div class="hint" data-i18n="zeroOff">0 = désactivé</div>
   </label>
-  <label>Rappel toutes les
-    <input type="number" id="minutes" class="num" min="0" max="240"> minutes
-    <div class="hint">0 = désactivé</div>
+  <label><span data-i18n="remindEvery">Rappel toutes les</span>
+    <input type="number" id="minutes" class="num" min="0" max="240">
+    <span data-i18n="minutesSuffix">minutes</span>
+    <div class="hint" data-i18n="zeroOff">0 = désactivé</div>
   </label>
   <label><input type="checkbox" id="hide-shorts">
-    Masquer Shorts / Reels / tendances</label>
-  <label>Sites surveillés (un par ligne)
+    <span data-i18n="hideShorts">Masquer Shorts / Reels / tendances</span></label>
+  <label><span data-i18n="sites">Sites surveillés (un par ligne)</span>
     <textarea id="sites"></textarea>
   </label>
-  <button id="save">Enregistrer</button><span id="status"></span>
+  <button id="save" data-i18n="save">Enregistrer</button><span id="status"></span>
   <script type="module" src="popup.js"></script>
 </body>
 </html>

@@ -59,6 +59,15 @@ Chaque release indique la version de Brave/Chromium embarquée.
   addictifs (Shorts YouTube, tendances X, Reels Instagram/Facebook…),
   réglages par popup (sites surveillés, seuils, on/off). Aucune collecte de
   données. 9 tests JS dédiés. Docs : `docs/FOCUS.md`.
+- `scripts/package_extensions.sh` : zips installables des extensions et du
+  thème, attachés automatiquement aux releases GitHub (utilisables dans tout
+  navigateur Chromium sans attendre les binaires). Garde-fou de version
+  manifest ↔ `VERSION`.
+- **Internationalisation FR/EN** des deux extensions (`_locales`,
+  `default_locale: fr`) : interface, messages d'état, invites des actions
+  rapides (l'action Traduire cible la langue de l'utilisateur), menu
+  contextuel et superpositions de pause. 8 tests dédiés (symétrie des clés,
+  couverture des clés utilisées, placeholders).
 
 ## [1.0.0] - 2026-06-11 (Brave 1.91.171, Chromium 149.0.7827.103)
 
