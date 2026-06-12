@@ -11,6 +11,16 @@
   "sites": { "message": "Sites surveillés (un par ligne)" },
   "save": { "message": "Enregistrer" },
   "saved": { "message": "✓ enregistré" },
+  "statsToday": { "message": "Aujourd'hui" },
+  "statsTotal": {
+    "message": "$time$ de défilement actif · $screens$ écrans",
+    "placeholders": {
+      "time": { "content": "$1" },
+      "screens": { "content": "$2" }
+    }
+  },
+  "statsEmpty": { "message": "Aucune activité mesurée aujourd'hui 🎉" },
+  "statsHint": { "message": "Statistiques locales (7 jours), jamais transmises." },
   "btnTop": { "message": "Remonter en haut" },
   "btnContinue": { "message": "Continuer" },
   "scrollMsg": {

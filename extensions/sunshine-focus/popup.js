@@ -1,5 +1,6 @@
-// Sunshine Focus — réglages (popup).
-import { DEFAULT_FOCUS_SETTINGS } from "./lib.js";
+// Sunshine Focus — réglages et bilan du jour (popup).
+import { DEFAULT_FOCUS_SETTINGS, dayKey, statsSummary,
+         formatMinutes } from "./lib.js";
 
 const $ = (sel) => document.querySelector(sel);
 const t = (key) => chrome.i18n.getMessage(key) || key;
@@ -36,6 +37,26 @@ async function save() {
   setTimeout(() => { $("#status").textContent = ""; }, 1500);
 }
 
+async function renderStats() {
+  const { focusStats } = await chrome.storage.local.get("focusStats");
+  const today = statsSummary(focusStats || {}, dayKey());
+  if (today.totalSeconds === 0 && today.totalScreens === 0) {
+    $("#stats-total").textContent = t("statsEmpty");
+    return;
+  }
+  $("#stats-total").textContent =
+    chrome.i18n.getMessage("statsTotal",
+      [formatMinutes(today.totalSeconds), String(today.totalScreens)])
+    || `${formatMinutes(today.totalSeconds)} · ${today.totalScreens} écrans`;
+  const list = $("#stats-sites");
+  for (const [host, entry] of today.sites.slice(0, 3)) {
+    const li = document.createElement("li");
+    li.textContent = `${host} — ${formatMinutes(entry.seconds)}`;
+    list.appendChild(li);
+  }
+}
+
 $("#save").addEventListener("click", save);
 applyI18n();
 load();
+renderStats();

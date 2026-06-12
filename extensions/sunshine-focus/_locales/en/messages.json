@@ -11,6 +11,16 @@
   "sites": { "message": "Watched sites (one per line)" },
   "save": { "message": "Save" },
   "saved": { "message": "✓ saved" },
+  "statsToday": { "message": "Today" },
+  "statsTotal": {
+    "message": "$time$ of active scrolling · $screens$ screens",
+    "placeholders": {
+      "time": { "content": "$1" },
+      "screens": { "content": "$2" }
+    }
+  },
+  "statsEmpty": { "message": "No activity measured today 🎉" },
+  "statsHint": { "message": "Local stats (7 days), never sent anywhere." },
   "btnTop": { "message": "Back to top" },
   "btnContinue": { "message": "Keep scrolling" },
   "scrollMsg": {

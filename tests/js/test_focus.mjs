@@ -91,6 +91,63 @@ test("messages : pluriel des minutes et nombre d'écrans", () => {
   assert.ok(lib.scrollMessage(12).includes("12 écrans"));
 });
 
+// ---------- Statistiques locales ----------
+
+test("dayKey : format AAAA-MM-JJ en date locale", () => {
+  assert.equal(lib.dayKey(new Date(2026, 5, 12)), "2026-06-12");
+  assert.equal(lib.dayKey(new Date(2026, 0, 3)), "2026-01-03");
+  assert.match(lib.dayKey(), /^\d{4}-\d{2}-\d{2}$/);
+});
+
+test("recordActivity : cumul par jour et par site", () => {
+  let stats = lib.recordActivity({}, "2026-06-12", "youtube.com",
+                                 { seconds: 30, screens: 2 });
+  stats = lib.recordActivity(stats, "2026-06-12", "youtube.com",
+                             { seconds: 30, screens: 1 });
+  stats = lib.recordActivity(stats, "2026-06-12", "reddit.com",
+                             { seconds: 120 });
+  assert.deepEqual(stats["2026-06-12"]["youtube.com"],
+                   { seconds: 60, screens: 3 });
+  assert.deepEqual(stats["2026-06-12"]["reddit.com"],
+                   { seconds: 120, screens: 0 });
+});
+
+test("pruneStats : ne garde que les jours les plus récents", () => {
+  const stats = {};
+  for (let d = 1; d <= 10; d++) {
+    lib.recordActivity(stats, `2026-06-${String(d).padStart(2, "0")}`,
+                       "x.com", { seconds: 1 });
+  }
+  lib.pruneStats(stats, 7);
+  const days = Object.keys(stats).sort();
+  assert.equal(days.length, 7);
+  assert.equal(days[0], "2026-06-04");
+  assert.equal(days.at(-1), "2026-06-10");
+});
+
+test("statsSummary : totaux et tri par temps décroissant", () => {
+  let stats = lib.recordActivity({}, "2026-06-12", "reddit.com",
+                                 { seconds: 300, screens: 12 });
+  stats = lib.recordActivity(stats, "2026-06-12", "youtube.com",
+                             { seconds: 900, screens: 30 });
+  const today = lib.statsSummary(stats, "2026-06-12");
+  assert.equal(today.totalSeconds, 1200);
+  assert.equal(today.totalScreens, 42);
+  assert.equal(today.sites[0][0], "youtube.com");
+  // Jour sans données : bilan vide.
+  const empty = lib.statsSummary(stats, "2026-06-11");
+  assert.equal(empty.totalSeconds, 0);
+  assert.deepEqual(empty.sites, []);
+});
+
+test("formatMinutes : seuils lisibles", () => {
+  assert.equal(lib.formatMinutes(0), "< 1 min");
+  assert.equal(lib.formatMinutes(59), "< 1 min");
+  assert.equal(lib.formatMinutes(60), "1 min");
+  assert.equal(lib.formatMinutes(45 * 60), "45 min");
+  assert.equal(lib.formatMinutes(125 * 60), "2 h 05");
+});
+
 // ---------- Cohérence des réglages par défaut ----------
 
 test("réglages par défaut raisonnables", () => {

@@ -78,6 +78,57 @@ export function cssForHost(hostname, rules = HIDE_RULES) {
   return "";
 }
 
+// ---------- Statistiques locales ----------
+// Structure : { "AAAA-MM-JJ": { "site.com": { seconds, screens } } }.
+// Stockées dans chrome.storage.local, conservées STATS_KEEP_DAYS jours,
+// jamais transmises hors du navigateur.
+
+export const STATS_KEEP_DAYS = 7;
+
+// Clé du jour en date locale (AAAA-MM-JJ).
+export function dayKey(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+// Ajoute de l'activité (secondes visibles, écrans défilés) pour un site.
+export function recordActivity(stats, day, host, { seconds = 0, screens = 0 } = {}) {
+  const days = stats || {};
+  const sites = (days[day] ||= {});
+  const entry = (sites[host] ||= { seconds: 0, screens: 0 });
+  entry.seconds += seconds;
+  entry.screens += screens;
+  return days;
+}
+
+// Ne conserve que les `keepDays` jours les plus récents.
+export function pruneStats(stats, keepDays = STATS_KEEP_DAYS) {
+  const days = Object.keys(stats).sort().reverse();
+  for (const day of days.slice(keepDays)) delete stats[day];
+  return stats;
+}
+
+// Bilan d'une journée : totaux + sites triés par temps décroissant.
+export function statsSummary(stats, day) {
+  const sites = Object.entries((stats || {})[day] || {})
+    .sort((a, b) => b[1].seconds - a[1].seconds);
+  return {
+    totalSeconds: sites.reduce((n, [, e]) => n + e.seconds, 0),
+    totalScreens: sites.reduce((n, [, e]) => n + e.screens, 0),
+    sites,
+  };
+}
+
+// Durée lisible : "< 1 min", "12 min", "2 h 05".
+export function formatMinutes(seconds) {
+  if (seconds < 60) return "< 1 min";
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return `${minutes} min`;
+  return `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, "0")}`;
+}
+
 // Texte du rappel de temps (minutes entières).
 export function reminderMessage(minutes) {
   return `Cela fait ${minutes} minute${minutes > 1 ? "s" : ""} que tu es ` +

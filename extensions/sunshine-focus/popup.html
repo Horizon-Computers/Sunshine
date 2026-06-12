@@ -7,6 +7,12 @@
            font: 13px/1.5 "Segoe UI", Arial, sans-serif;
            color: #3A2E1E; background: #FFF8EE; }
     h1 { font-size: 14px; margin: 0 0 10px; color: #C9842A; }
+    #stats { background: #fff; border-radius: 9px; padding: 8px 10px;
+             margin-bottom: 10px; box-shadow: 0 1px 4px rgba(58,46,30,.08); }
+    #stats h2 { font-size: 12px; margin: 0 0 4px; color: #C9842A; }
+    #stats p { margin: 0 0 4px; font-weight: 600; }
+    #stats ul { margin: 0 0 4px; padding-left: 18px; }
+    #stats li { margin: 1px 0; }
     label { display: block; margin: 8px 0; }
     .num { width: 56px; }
     textarea { width: 100%; box-sizing: border-box; height: 88px;
@@ -23,6 +29,14 @@
 </head>
 <body>
   <h1 data-i18n="title">🧘 Sunshine Focus</h1>
+
+  <div id="stats">
+    <h2 data-i18n="statsToday">Aujourd'hui</h2>
+    <p id="stats-total"></p>
+    <ul id="stats-sites"></ul>
+    <div class="hint" data-i18n="statsHint">Statistiques locales (7 jours), jamais transmises.</div>
+  </div>
+
   <label><input type="checkbox" id="enabled">
     <span data-i18n="enable">Activer Sunshine Focus</span></label>
   <label><span data-i18n="pauseEvery">Pause tous les</span>

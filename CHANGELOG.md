@@ -68,6 +68,10 @@ Chaque release indique la version de Brave/Chromium embarquée.
   rapides (l'action Traduire cible la langue de l'utilisateur), menu
   contextuel et superpositions de pause. 8 tests dédiés (symétrie des clés,
   couverture des clés utilisées, placeholders).
+- Focus : **bilan du jour** dans le popup — temps de défilement actif,
+  écrans défilés, top 3 des sites. Statistiques 100 % locales
+  (`chrome.storage.local`), granularité site + jour, purge automatique à
+  7 jours. 5 tests dédiés (cumul, purge, bilan, formats).
 
 ## [1.0.0] - 2026-06-11 (Brave 1.91.171, Chromium 149.0.7827.103)
 

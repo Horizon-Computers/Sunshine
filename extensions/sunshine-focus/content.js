@@ -70,6 +70,33 @@
     document.documentElement.appendChild(host);
   }
 
+  // --- Statistiques locales (7 jours, jamais transmises) ---
+  let pendingSeconds = 0;   // secondes visibles non encore enregistrées
+  let maxScreens = 0;       // plus grand défilement atteint sur cette page
+  let flushedScreens = 0;   // part déjà enregistrée de maxScreens
+
+  async function flushStats() {
+    const deltaScreens = Math.max(0, maxScreens - flushedScreens);
+    const deltaSeconds = pendingSeconds;
+    if (deltaSeconds === 0 && deltaScreens === 0) return;
+    pendingSeconds = 0;
+    flushedScreens = maxScreens;
+    try {
+      const { focusStats } = await chrome.storage.local.get("focusStats");
+      const stats = lib.recordActivity(
+        focusStats || {}, lib.dayKey(),
+        location.hostname.replace(/^www\./, ""),
+        { seconds: deltaSeconds, screens: deltaScreens });
+      await chrome.storage.local.set({ focusStats: lib.pruneStats(stats) });
+    } catch {
+      // Contexte d'extension invalidé (navigation/maj) : delta perdu, sans gravité.
+    }
+  }
+  addEventListener("pagehide", flushStats);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") flushStats();
+  });
+
   // --- Garde-fou de défilement ---
   let lastWarnedScreens = 0;
   let scrollTimer = null;
@@ -78,6 +105,7 @@
     scrollTimer = setTimeout(() => {
       scrollTimer = null;
       const screens = lib.screensScrolled(scrollY, innerHeight);
+      maxScreens = Math.max(maxScreens, screens);
       if (lib.shouldWarn(screens, cfg.screensBudget, lastWarnedScreens)) {
         lastWarnedScreens = screens;
         showBreak(chrome.i18n.getMessage("scrollMsg", [String(screens)])
@@ -86,18 +114,19 @@
     }, 400);
   }, { passive: true });
 
-  // --- Rappel de temps de présence (onglet visible uniquement) ---
-  if (cfg.reminderMinutes > 0) {
-    const TICK = 5; // secondes
-    let visibleSeconds = 0;
-    setInterval(() => {
-      if (document.visibilityState !== "visible") return;
-      visibleSeconds += TICK;
-      if (visibleSeconds % (cfg.reminderMinutes * 60) === 0) {
-        const minutes = Math.round(visibleSeconds / 60);
-        showBreak(chrome.i18n.getMessage("reminderMsg", [String(minutes)])
-                  || lib.reminderMessage(minutes));
-      }
-    }, TICK * 1000);
-  }
+  // --- Présence active : rappel de temps + alimentation des stats ---
+  const TICK = 5; // secondes
+  let visibleSeconds = 0;
+  setInterval(() => {
+    if (document.visibilityState !== "visible") return;
+    visibleSeconds += TICK;
+    pendingSeconds += TICK;
+    if (visibleSeconds % 30 === 0) flushStats();
+    if (cfg.reminderMinutes > 0 &&
+        visibleSeconds % (cfg.reminderMinutes * 60) === 0) {
+      const minutes = Math.round(visibleSeconds / 60);
+      showBreak(chrome.i18n.getMessage("reminderMsg", [String(minutes)])
+                || lib.reminderMessage(minutes));
+    }
+  }, TICK * 1000);
 })();

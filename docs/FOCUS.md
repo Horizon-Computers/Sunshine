@@ -5,7 +5,7 @@ contrôle sur les sites à défilement infini. Embarquée dans les paquets de
 toutes les plateformes (Windows, macOS, Linux) puisqu'elle vit dans le
 navigateur.
 
-## Trois protections
+## Quatre protections
 
 1. **Garde-fou de défilement** : après l'équivalent de *N* écrans défilés
    (10 par défaut), une pause douce s'affiche — « Tu as fait défiler
@@ -18,6 +18,9 @@ navigateur.
 3. **Masquage des modules addictifs** : Shorts YouTube, tendances X/Twitter,
    Reels/Explorer Instagram, Reels Facebook, carrousels Reddit — masqués par
    CSS injectée.
+4. **Bilan du jour** : le popup affiche le temps de défilement **actif**
+   (onglet visible) et le nombre d'écrans défilés aujourd'hui, avec le top 3
+   des sites. Prendre conscience, c'est déjà reprendre la main.
 
 ## Réglages
 
@@ -33,8 +36,9 @@ Clic sur l'icône **Sunshine Focus** :
 
 Sur les sites non listés, l'extension ne fait **rien** : pas de script
 actif, pas de mesure, pas de collecte. Aucune donnée ne quitte le
-navigateur (les compteurs vivent dans la page, les réglages dans
-`chrome.storage.local`).
+navigateur : réglages et statistiques vivent dans `chrome.storage.local`,
+et les statistiques sont automatiquement purgées au-delà de **7 jours**.
+Granularité volontairement grossière (site + jour), pas d'URL ni d'historique.
 
 ## Notes techniques
 
