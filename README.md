@@ -32,6 +32,7 @@ Les versions épinglées vivent dans le fichier [`VERSION`](VERSION).
 ├── assets/logo/             # Logo Sunshine (source SVG)
 ├── branding/                # Constantes de marque (nom, identifiants, couleurs)
 ├── customize/sunshine.toml  # Personnalisation du navigateur (voir docs/CUSTOMIZE.md)
+├── extensions/              # Extensions intégrées (Sunshine Assistant — IA Mistral 7B)
 ├── patches/                 # Patches appliqués sur brave-core après checkout
 ├── scripts/
 │   ├── init.sh              # Clone brave-browser/brave-core à la version épinglée
@@ -88,6 +89,13 @@ Page d'accueil, couleurs du thème, favoris préinstallés, vie privée
 [`customize/sunshine.toml`](customize/sunshine.toml) puis `make customize`.
 Par défaut, Sunshine est « le moteur de Brave sans la couche crypto ».
 Voir [docs/CUSTOMIZE.md](docs/CUSTOMIZE.md).
+
+## 🤖 Assistant IA (Mistral 7B)
+
+Sunshine embarque **Sunshine Assistant**, un panneau latéral qui résume,
+traduit et explique la page courante et répond à tes questions — propulsé par
+**Mistral 7B**, en local via [Ollama](https://ollama.com) (privé, par défaut)
+ou via l'API Mistral AI. Voir [docs/ASSISTANT.md](docs/ASSISTANT.md).
 
 ## 🖼 Logo
 

@@ -36,6 +36,13 @@ Chaque release indique la version de Brave/Chromium embarquée.
   Le paquet Linux embarque le tout ; le lanceur `/usr/bin/sunshine-browser`
   devient un script qui applique les drapeaux. 13 tests unitaires dédiés +
   test d'installation réelle du `.deb` en CI.
+- **Sunshine Assistant** (`extensions/sunshine-assistant/`) : assistant IA de
+  navigation en panneau latéral, propulsé par **Mistral 7B** — backend Ollama
+  local (`mistral:7b`, privé, par défaut) ou API Mistral AI
+  (`open-mistral-7b`). Résumé / points clés / traduction / explication de la
+  page courante, chat libre avec historique, réponses en streaming, réglages
+  intégrés avec test de connexion. Embarqué dans le paquet Linux. 12 tests
+  JavaScript (`node --test`) en CI. Docs : `docs/ASSISTANT.md`.
 
 ## [1.0.0] - 2026-06-11 (Brave 1.91.171, Chromium 149.0.7827.103)
 

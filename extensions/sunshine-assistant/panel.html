@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Sunshine Assistant</title>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <header>
+    <h1>☀️ Sunshine Assistant</h1>
+    <button id="settings-toggle" title="Réglages">⚙</button>
+  </header>
+
+  <section id="settings" hidden>
+    <h2>Backend Mistral 7B</h2>
+    <label class="radio">
+      <input type="radio" name="backend" value="ollama" checked>
+      Ollama local (privé, gratuit)
+    </label>
+    <div class="field" data-backend="ollama">
+      <label>URL d'Ollama
+        <input id="ollama-url" type="text" placeholder="http://localhost:11434">
+      </label>
+      <label>Modèle
+        <input id="ollama-model" type="text" placeholder="mistral:7b">
+      </label>
+    </div>
+    <label class="radio">
+      <input type="radio" name="backend" value="mistral">
+      API Mistral AI (cloud, clé requise)
+    </label>
+    <div class="field" data-backend="mistral">
+      <label>Clé d'API
+        <input id="mistral-key" type="password" placeholder="clé api.mistral.ai">
+      </label>
+      <label>Modèle
+        <input id="mistral-model" type="text" placeholder="open-mistral-7b">
+      </label>
+    </div>
+    <div class="settings-actions">
+      <button id="settings-save">Enregistrer</button>
+      <button id="settings-test">Tester la connexion</button>
+    </div>
+    <p id="settings-status"></p>
+  </section>
+
+  <section id="quick-actions">
+    <button data-prompt="Résume cette page en quelques phrases.">📝 Résumer</button>
+    <button data-prompt="Donne les points clés de cette page sous forme de liste.">🔑 Points clés</button>
+    <button data-prompt="Traduis le contenu principal de cette page en français.">🌐 Traduire</button>
+    <button data-prompt="Explique le contenu de cette page simplement, comme à un débutant.">💡 Expliquer</button>
+  </section>
+
+  <main id="messages" aria-live="polite"></main>
+
+  <footer>
+    <label id="context-toggle" title="Joindre le contenu de l'onglet actif à la question">
+      <input type="checkbox" id="use-page" checked> 📄 Page courante
+    </label>
+    <div id="composer">
+      <textarea id="input" rows="2"
+        placeholder="Pose une question sur la page ou sur le web…"></textarea>
+      <button id="send" title="Envoyer">➤</button>
+    </div>
+  </footer>
+
+  <script type="module" src="panel.js"></script>
+</body>
+</html>

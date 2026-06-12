@@ -84,6 +84,11 @@ if [[ -d "${GEN}/theme" ]]; then
   mkdir -p "${STAGE}/${INSTALL_DIR}/extensions"
   cp -a "${GEN}/theme" "${STAGE}/${INSTALL_DIR}/extensions/sunshine-theme"
 fi
+# Extensions intégrées du dépôt (Sunshine Assistant…).
+if [[ -d "${ROOT}/extensions" ]]; then
+  mkdir -p "${STAGE}/${INSTALL_DIR}/extensions"
+  cp -a "${ROOT}/extensions/." "${STAGE}/${INSTALL_DIR}/extensions/"
+fi
 if [[ -f "${GEN}/policies.json" ]]; then
   mkdir -p "${STAGE}/etc/${PKG}/policies/managed"
   install -m 644 "${GEN}/policies.json" \

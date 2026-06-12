@@ -28,15 +28,18 @@ dist: ## Crée les paquets d'installation (upstream create_dist)
 package: ## Construit le .deb et l'archive portable Linux depuis out/Release
 	./scripts/package_linux.sh
 
-test: ## Lance les tests unitaires
+test: ## Lance les tests unitaires (Python + JavaScript)
 	python3 -m unittest discover -s tests -v
+	node --test tests/js/test_assistant.mjs
 
 check: ## Vérifie la syntaxe des scripts et le fichier VERSION
 	bash -n scripts/*.sh
 	python3 -m py_compile scripts/apply_branding.py scripts/customize.py
+	set -e; for f in extensions/*/*.js; do node --input-type=module --check < "$$f"; done
 	grep -qE '^SUNSHINE_VERSION=[0-9]+\.[0-9]+\.[0-9]+$$' VERSION
 	grep -qE '^BRAVE_VERSION=[0-9]+\.[0-9]+\.[0-9]+$$' VERSION
 	python3 -m unittest discover -s tests
+	node --test tests/js/test_assistant.mjs
 
 clean: ## Supprime les icônes générées (pas le checkout build/)
 	rm -rf assets/logo/png

@@ -28,8 +28,13 @@ jobs:
           grep -qE '^BRAVE_VERSION=[0-9]+\.[0-9]+\.[0-9]+$' VERSION
           grep -qE '^CHROMIUM_VERSION=[0-9.]+$' VERSION
 
-      - name: Tests unitaires
+      - name: Tests unitaires Python
         run: python3 -m unittest discover -s tests -v
+
+      - name: Tests JavaScript (Sunshine Assistant)
+        run: |
+          for f in extensions/*/*.js; do node --input-type=module --check < "$f"; done
+          node --test tests/js/test_assistant.mjs
 
       - name: Valider les SVG et générer les icônes (PNG + ICO + ICNS)
         run: |
@@ -58,6 +63,8 @@ jobs:
           for path in usr/bin/sunshine-browser \
                       opt/sunshine-browser/initial_bookmarks.html \
                       opt/sunshine-browser/extensions/sunshine-theme/manifest.json \
+                      opt/sunshine-browser/extensions/sunshine-assistant/manifest.json \
+                      opt/sunshine-browser/extensions/sunshine-assistant/panel.html \
                       etc/sunshine-browser/policies/managed/sunshine.json \
                       etc/sunshine-browser/flags.conf; do
             echo "${CONTENTS}" | grep -q "${path}"

@@ -27,6 +27,14 @@ sed -i.bak -E "s/^SUNSHINE_VERSION=.*/SUNSHINE_VERSION=${NEW}/" "${VERSION_FILE}
 rm -f "${VERSION_FILE}.bak"
 echo "==> VERSION : ${SUNSHINE_VERSION} -> ${NEW}"
 
+# Versions des extensions intégrées, alignées sur Sunshine (testé en CI).
+for manifest in "${ROOT}"/extensions/*/manifest.json; do
+  [[ -f "${manifest}" ]] || continue
+  sed -i.bak -E "s/\"version\": \"[0-9.]+\"/\"version\": \"${NEW}\"/" "${manifest}"
+  rm -f "${manifest}.bak"
+  echo "==> $(basename "$(dirname "${manifest}")") : version ${NEW}"
+done
+
 TODAY="$(date +%Y-%m-%d)"
 HEADER="## [${NEW}] - ${TODAY} (Brave ${BRAVE_VERSION}, Chromium ${CHROMIUM_VERSION})"
 if grep -q '^## \[Unreleased\]' "${CHANGELOG}"; then
