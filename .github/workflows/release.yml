@@ -26,6 +26,11 @@ jobs:
           ./scripts/generate_icons.sh
           (cd assets/logo && zip -r ../../sunshine-icons.zip png sunshine-logo.svg sunshine-icon.svg)
 
+      - name: Empaqueter les extensions et le thème
+        run: |
+          python3 scripts/customize.py
+          ./scripts/package_extensions.sh
+
       - name: Préparer les notes de release
         id: notes
         run: |
@@ -36,6 +41,10 @@ jobs:
             echo "- Basé sur **Brave v${BRAVE_VERSION}** (Chromium ${CHROMIUM_VERSION})"
             echo "- Instructions de build : voir \`docs/BUILD.md\`"
             echo
+            echo "**Inclus dans cette release** : extensions Sunshine Assistant"
+            echo "(IA Mistral 7B) et Sunshine Focus (anti-défilement) + thème,"
+            echo "utilisables dans tout navigateur Chromium (mode développeur)."
+            echo
             echo "Les binaires (Windows/macOS/Linux) sont attachés à cette release"
             echo "lorsqu'ils ont été produits sur la machine de build."
           } > release-notes.md
@@ -44,5 +53,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           body_path: release-notes.md
-          files: sunshine-icons.zip
+          files: |
+            sunshine-icons.zip
+            dist/*.zip
+            dist/SHA256SUMS.extensions.txt
           draft: false
