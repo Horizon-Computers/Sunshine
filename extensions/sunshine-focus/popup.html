@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { width: 300px; margin: 0; padding: 14px;
+           font: 13px/1.5 "Segoe UI", Arial, sans-serif;
+           color: #3A2E1E; background: #FFF8EE; }
+    h1 { font-size: 14px; margin: 0 0 10px; color: #C9842A; }
+    label { display: block; margin: 8px 0; }
+    .num { width: 56px; }
+    textarea { width: 100%; box-sizing: border-box; height: 88px;
+               border: 1px solid #d8c9a8; border-radius: 7px; padding: 6px; }
+    input[type="number"] { border: 1px solid #d8c9a8; border-radius: 6px;
+                           padding: 3px 5px; }
+    button { margin-top: 10px; padding: 7px 14px; border: 0;
+             border-radius: 8px; background: #E8A23C; color: #fff;
+             cursor: pointer; }
+    button:hover { background: #C9842A; }
+    #status { margin-left: 8px; color: #3e7a2e; }
+    .hint { color: #8a7a62; font-size: 11px; margin-top: 2px; }
+  </style>
+</head>
+<body>
+  <h1>🧘 Sunshine Focus</h1>
+  <label><input type="checkbox" id="enabled"> Activer Sunshine Focus</label>
+  <label>Pause tous les
+    <input type="number" id="screens" class="num" min="0" max="100"> écrans
+    <div class="hint">0 = désactivé</div>
+  </label>
+  <label>Rappel toutes les
+    <input type="number" id="minutes" class="num" min="0" max="240"> minutes
+    <div class="hint">0 = désactivé</div>
+  </label>
+  <label><input type="checkbox" id="hide-shorts">
+    Masquer Shorts / Reels / tendances</label>
+  <label>Sites surveillés (un par ligne)
+    <textarea id="sites"></textarea>
+  </label>
+  <button id="save">Enregistrer</button><span id="status"></span>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

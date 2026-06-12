@@ -53,6 +53,12 @@ Chaque release indique la version de Brave/Chromium embarquée.
 - Assistant : menu contextuel « Demander à Sunshine Assistant » sur le texte
   sélectionné (clic droit → le panneau s'ouvre et explique le passage),
   bouton 🗨+ nouvelle conversation, carte assistant sur le site vitrine.
+- **Sunshine Focus** (`extensions/sunshine-focus/`) : anti-défilement infini
+  sur toutes les plateformes — pause douce après N écrans défilés (10 par
+  défaut), rappel du temps de présence actif (10 min), masquage des modules
+  addictifs (Shorts YouTube, tendances X, Reels Instagram/Facebook…),
+  réglages par popup (sites surveillés, seuils, on/off). Aucune collecte de
+  données. 9 tests JS dédiés. Docs : `docs/FOCUS.md`.
 
 ## [1.0.0] - 2026-06-11 (Brave 1.91.171, Chromium 149.0.7827.103)
 

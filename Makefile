@@ -36,7 +36,7 @@ apt-repo: ## Génère le dépôt APT (apt/) à partir des .deb de dist/
 
 test: ## Lance les tests unitaires (Python + JavaScript)
 	python3 -m unittest discover -s tests -v
-	node --test tests/js/test_assistant.mjs
+	node --test tests/js/*.mjs
 
 check: ## Vérifie la syntaxe des scripts et le fichier VERSION
 	bash -n scripts/*.sh
@@ -45,7 +45,7 @@ check: ## Vérifie la syntaxe des scripts et le fichier VERSION
 	grep -qE '^SUNSHINE_VERSION=[0-9]+\.[0-9]+\.[0-9]+$$' VERSION
 	grep -qE '^BRAVE_VERSION=[0-9]+\.[0-9]+\.[0-9]+$$' VERSION
 	python3 -m unittest discover -s tests
-	node --test tests/js/test_assistant.mjs
+	node --test tests/js/*.mjs
 
 clean: ## Supprime les icônes générées (pas le checkout build/)
 	rm -rf assets/logo/png

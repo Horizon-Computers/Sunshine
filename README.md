@@ -32,7 +32,7 @@ Les versions épinglées vivent dans le fichier [`VERSION`](VERSION).
 ├── assets/logo/             # Logo Sunshine (source SVG)
 ├── branding/                # Constantes de marque (nom, identifiants, couleurs)
 ├── customize/sunshine.toml  # Personnalisation du navigateur (voir docs/CUSTOMIZE.md)
-├── extensions/              # Extensions intégrées (Sunshine Assistant — IA Mistral 7B)
+├── extensions/              # Extensions intégrées (Assistant IA, Focus anti-scroll)
 ├── patches/                 # Patches appliqués sur brave-core après checkout
 ├── scripts/
 │   ├── init.sh              # Clone brave-browser/brave-core à la version épinglée
@@ -99,6 +99,13 @@ Sunshine embarque **Sunshine Assistant**, un panneau latéral qui résume,
 traduit et explique la page courante et répond à tes questions — propulsé par
 **Mistral 7B**, en local via [Ollama](https://ollama.com) (privé, par défaut)
 ou via l'API Mistral AI. Voir [docs/ASSISTANT.md](docs/ASSISTANT.md).
+
+## 🧘 Anti-défilement infini
+
+**Sunshine Focus** propose une pause après N écrans défilés, rappelle le
+temps passé sur les sites à flux infini et masque Shorts, Reels et
+tendances. Configurable par site, aucune donnée collectée.
+Voir [docs/FOCUS.md](docs/FOCUS.md).
 
 ## 🖼 Logo
 
