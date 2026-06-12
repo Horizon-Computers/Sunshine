@@ -10,6 +10,11 @@ name: Release
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag de la release (ex. v1.0.0) — créé s'il n'existe pas"
+        required: true
 
 permissions:
   contents: write
@@ -17,6 +22,8 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
 
@@ -36,7 +43,7 @@ jobs:
         run: |
           source <(grep -E '^[A-Z_]+=' VERSION)
           {
-            echo "## Sunshine ${GITHUB_REF_NAME}"
+            echo "## Sunshine ${RELEASE_TAG}"
             echo
             echo "- Basé sur **Brave v${BRAVE_VERSION}** (Chromium ${CHROMIUM_VERSION})"
             echo "- Instructions de build : voir \`docs/BUILD.md\`"
@@ -52,6 +59,7 @@ jobs:
       - name: Créer la release GitHub
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
           body_path: release-notes.md
           files: |
             sunshine-icons.zip
