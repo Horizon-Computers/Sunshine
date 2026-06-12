@@ -30,10 +30,13 @@ alors `Release.gpg`, `InRelease` et la clé publique
 `apt/sunshine-archive-keyring.asc` ; les utilisateurs remplacent
 `[trusted=yes]` par `[signed-by=/usr/share/keyrings/sunshine.asc]`.
 
-Publication : copier `apt/` dans le site (`site/apt/`) avant le déploiement
-Pages, ou sur une branche `gh-pages`. Chaque nouvelle release : `make package
-&& make apt-repo` puis re-publier — les clients voient la mise à jour au
-prochain `apt update`.
+**Publication automatique** : le workflow Pages
+(`.github/workflows/pages.yml`) reconstruit le site à chaque release
+publiée ; s'il trouve des `.deb` attachés à la dernière release, il génère le
+dépôt APT et le publie sous `…/Sunshine/apt`. Il suffit donc d'attacher le
+`.deb` à la release GitHub — les utilisateurs voient la mise à jour au
+prochain `apt update`. (Pour signer, exécuter `make apt-repo` localement avec
+`SUNSHINE_GPG_KEY` et publier manuellement.)
 
 ## Windows
 

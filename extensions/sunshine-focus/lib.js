@@ -121,6 +121,23 @@ export function statsSummary(stats, day) {
   };
 }
 
+// Bilan des `days` derniers jours (ordre chronologique), jours vides à zéro.
+export function weekSummary(stats, endDay = dayKey(), days = STATS_KEEP_DAYS) {
+  const [y, m, d] = endDay.split("-").map(Number);
+  const out = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const day = dayKey(new Date(y, m - 1, d - i));
+    let seconds = 0;
+    let screens = 0;
+    for (const entry of Object.values((stats || {})[day] || {})) {
+      seconds += entry.seconds;
+      screens += entry.screens;
+    }
+    out.push({ day, seconds, screens });
+  }
+  return out;
+}
+
 // Durée lisible : "< 1 min", "12 min", "2 h 05".
 export function formatMinutes(seconds) {
   if (seconds < 60) return "< 1 min";

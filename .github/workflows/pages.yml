@@ -1,11 +1,14 @@
-# Déploie le site vitrine (site/) sur GitHub Pages à chaque push sur main.
+# Déploie le site vitrine (site/) — et le dépôt APT si des .deb sont
+# attachés à la dernière release — sur GitHub Pages.
 # Activer Pages dans Settings → Pages → Source : « GitHub Actions ».
 name: Site (GitHub Pages)
 
 on:
   push:
     branches: [main]
-    paths: ["site/**", "assets/logo/**", ".github/workflows/pages.yml"]
+    paths: ["site/**", "assets/logo/**", "scripts/make_apt_repo.sh", ".github/workflows/pages.yml"]
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
@@ -30,6 +33,18 @@ jobs:
         run: |
           mkdir -p site/logo
           cp assets/logo/*.svg site/logo/
+
+      - name: Intégrer le dépôt APT (si des .deb sont publiés en release)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/debs
+          gh release download --pattern '*.deb' --dir /tmp/debs \
+            --repo "${GITHUB_REPOSITORY}" 2>/dev/null \
+            || { echo "Aucun .deb dans la dernière release : site sans dépôt APT"; exit 0; }
+          ./scripts/make_apt_repo.sh /tmp/debs
+          cp -r apt site/apt
+          echo "Dépôt APT intégré au site (apt/)"
 
       - uses: actions/configure-pages@v5
 

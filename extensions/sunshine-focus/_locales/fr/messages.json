@@ -21,6 +21,7 @@
   },
   "statsEmpty": { "message": "Aucune activité mesurée aujourd'hui 🎉" },
   "statsHint": { "message": "Statistiques locales (7 jours), jamais transmises." },
+  "statsClear": { "message": "Effacer les statistiques" },
   "btnTop": { "message": "Remonter en haut" },
   "btnContinue": { "message": "Continuer" },
   "scrollMsg": {

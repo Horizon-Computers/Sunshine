@@ -21,6 +21,7 @@
   },
   "statsEmpty": { "message": "No activity measured today 🎉" },
   "statsHint": { "message": "Local stats (7 days), never sent anywhere." },
+  "statsClear": { "message": "Clear statistics" },
   "btnTop": { "message": "Back to top" },
   "btnContinue": { "message": "Keep scrolling" },
   "scrollMsg": {

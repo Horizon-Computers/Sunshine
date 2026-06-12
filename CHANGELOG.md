@@ -72,6 +72,12 @@ Chaque release indique la version de Brave/Chromium embarquée.
   écrans défilés, top 3 des sites. Statistiques 100 % locales
   (`chrome.storage.local`), granularité site + jour, purge automatique à
   7 jours. 5 tests dédiés (cumul, purge, bilan, formats).
+- Focus : graphique des 7 derniers jours dans le popup (barres, jour courant
+  surligné, info-bulle par jour) + lien « Effacer les statistiques ».
+- Pages : le site publie automatiquement le **dépôt APT** quand des `.deb`
+  sont attachés à la dernière release (déclenchement aussi à la publication
+  d'une release) — la chaîne de mise à jour Linux est bouclée de bout en
+  bout.
 
 ## [1.0.0] - 2026-06-11 (Brave 1.91.171, Chromium 149.0.7827.103)
 

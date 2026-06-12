@@ -13,6 +13,17 @@
     #stats p { margin: 0 0 4px; font-weight: 600; }
     #stats ul { margin: 0 0 4px; padding-left: 18px; }
     #stats li { margin: 1px 0; }
+    #stats-week { display: flex; align-items: flex-end; gap: 4px;
+                  height: 42px; margin: 6px 0 2px; }
+    #stats-week .bar { flex: 1; display: flex; flex-direction: column;
+                       justify-content: flex-end; align-items: center;
+                       height: 100%; font-size: 9px; color: #8a7a62; }
+    #stats-week .bar i { display: block; width: 100%;
+                         background: #E8A23C; border-radius: 3px 3px 0 0;
+                         min-height: 2px; }
+    #stats-week .bar.today i { background: #C9842A; }
+    #stats-clear { display: inline-block; margin-top: 4px;
+                   font-size: 11px; color: #C9842A; }
     label { display: block; margin: 8px 0; }
     .num { width: 56px; }
     textarea { width: 100%; box-sizing: border-box; height: 88px;
@@ -34,7 +45,9 @@
     <h2 data-i18n="statsToday">Aujourd'hui</h2>
     <p id="stats-total"></p>
     <ul id="stats-sites"></ul>
+    <div id="stats-week" title=""></div>
     <div class="hint" data-i18n="statsHint">Statistiques locales (7 jours), jamais transmises.</div>
+    <a href="#" id="stats-clear" data-i18n="statsClear">Effacer les statistiques</a>
   </div>
 
   <label><input type="checkbox" id="enabled">

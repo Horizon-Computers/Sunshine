@@ -140,6 +140,22 @@ test("statsSummary : totaux et tri par temps décroissant", () => {
   assert.deepEqual(empty.sites, []);
 });
 
+test("weekSummary : 7 jours chronologiques, vides à zéro, mois traversé", () => {
+  let stats = lib.recordActivity({}, "2026-06-12", "x.com",
+                                 { seconds: 600, screens: 5 });
+  stats = lib.recordActivity(stats, "2026-06-10", "x.com", { seconds: 60 });
+  const week = lib.weekSummary(stats, "2026-06-12");
+  assert.equal(week.length, 7);
+  assert.equal(week[0].day, "2026-06-06");
+  assert.equal(week.at(-1).day, "2026-06-12");
+  assert.equal(week.at(-1).seconds, 600);
+  assert.equal(week[4].seconds, 60);     // 2026-06-10
+  assert.equal(week[1].seconds, 0);      // jour sans données
+  // Passage de mois : la fenêtre remonte sur mai.
+  const cross = lib.weekSummary({}, "2026-06-03");
+  assert.equal(cross[0].day, "2026-05-28");
+});
+
 test("formatMinutes : seuils lisibles", () => {
   assert.equal(lib.formatMinutes(0), "< 1 min");
   assert.equal(lib.formatMinutes(59), "< 1 min");
