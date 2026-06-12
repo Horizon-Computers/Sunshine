@@ -40,6 +40,7 @@ Les versions épinglées vivent dans le fichier [`VERSION`](VERSION).
 │   ├── generate_icons.sh    # Génère PNG + ICO + ICNS depuis le SVG
 │   ├── package_linux.sh     # .deb + archive portable Linux
 │   ├── package_windows.sh   # zip portable Windows + installeur Inno Setup
+│   ├── package_macos.sh     # DMG macOS (sur macOS)
 │   ├── make_apt_repo.sh     # Dépôt APT (mises à jour automatiques)
 │   ├── make_patch.sh        # Exporte les modifs de brave-core en patch
 │   ├── bump_version.sh      # Bump de version Sunshine + changelog
@@ -106,6 +107,12 @@ ou via l'API Mistral AI. Voir [docs/ASSISTANT.md](docs/ASSISTANT.md).
 temps passé sur les sites à flux infini et masque Shorts, Reels et
 tendances. Configurable par site, aucune donnée collectée.
 Voir [docs/FOCUS.md](docs/FOCUS.md).
+
+## 📖 Mode lecture zen
+
+**Sunshine Reader** : un clic et l'article s'affiche sans distractions —
+texte épuré, temps de lecture estimé, taille réglable. Échap pour revenir.
+Voir [docs/READER.md](docs/READER.md).
 
 ## 🌅 Nouvel onglet
 

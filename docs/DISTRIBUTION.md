@@ -57,10 +57,21 @@ exige Windows.
 
 ## macOS
 
-Pas encore de script dédié : utiliser `npm run create_dist Release` (chaîne
-amont de Brave) qui produit le `.dmg`, après `make brand` pour que les icônes
-`sunshine.icns` soient intégrées. Un script `package_macos.sh` (DMG brandé)
-est prévu.
+```bash
+./scripts/package_macos.sh [out/Release]   # sur macOS uniquement
+```
+
+Produit `dist/sunshine-browser-<version>-macos.dmg` : le `.app` du build
+renommé **Sunshine.app** (nom affiché + icône `sunshine.icns`),
+personnalisation et extensions copiées dans `Contents/Resources/`,
+re-signature **ad hoc** et DMG avec lien `/Applications`.
+
+⚠️ Limites actuelles (en attendant le patch brave-core de rebranding
+profond) : le renommage est superficiel (bundle id et binaires internes
+inchangés) et la signature ad hoc déclenche Gatekeeper chez les
+utilisateurs — pour distribuer publiquement, signer avec un certificat
+**Developer ID** puis notariser (`xcrun notarytool`). Ce script n'est pas
+couvert par la CI (macOS requis) : seul `bash -n`/shellcheck le vérifient.
 
 ## Récapitulatif des sommes de contrôle
 

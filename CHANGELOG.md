@@ -80,6 +80,16 @@ Chaque release indique la version de Brave/Chromium embarquée.
   (Brave Search par défaut, 4 alternatives), raccourcis éditables. Aucun
   flux d'actualités, aucune requête réseau spontanée. FR/EN, 9 tests.
   Docs : `docs/NEWTAB.md`.
+- **Sunshine Reader** (`extensions/sunshine-reader/`) : mode lecture zen —
+  un clic sur l'icône épure l'article (détection du contenu principal par
+  score texte/densité de liens, liste blanche de balises et d'attributs),
+  temps de lecture estimé, réglages A−/A+/serif, fermeture par Échap.
+  S'exécute uniquement sur clic (activeTab), aucun réseau. FR/EN, 8 tests.
+  Docs : `docs/READER.md`.
+- `scripts/package_macos.sh` : DMG macOS (Sunshine.app renommé, icône,
+  personnalisation et extensions embarquées, re-signature ad hoc, lien
+  /Applications). Expérimental — macOS requis, non couvert par la CI ;
+  limites documentées dans `docs/DISTRIBUTION.md`.
 - Pages : le site publie automatiquement le **dépôt APT** quand des `.deb`
   sont attachés à la dernière release (déclenchement aussi à la publication
   d'une release) — la chaîne de mise à jour Linux est bouclée de bout en
