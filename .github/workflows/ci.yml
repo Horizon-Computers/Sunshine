@@ -67,6 +67,8 @@ jobs:
                       opt/sunshine-browser/extensions/sunshine-assistant/panel.html \
                       opt/sunshine-browser/extensions/sunshine-focus/manifest.json \
                       opt/sunshine-browser/extensions/sunshine-focus/content.js \
+                      opt/sunshine-browser/extensions/sunshine-newtab/manifest.json \
+                      opt/sunshine-browser/extensions/sunshine-newtab/newtab.html \
                       etc/sunshine-browser/policies/managed/sunshine.json \
                       etc/sunshine-browser/flags.conf; do
             echo "${CONTENTS}" | grep -q "${path}"

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Nouvel onglet</title>
+  <link rel="stylesheet" href="newtab.css">
+</head>
+<body data-sky="day">
+  <main>
+    <div id="clock">--:--</div>
+    <div id="date"></div>
+    <div id="greeting"></div>
+
+    <form id="search">
+      <input id="query" type="search" autofocus autocomplete="off"
+             data-i18n-placeholder="searchPlaceholder"
+             placeholder="Rechercher sur le web…">
+    </form>
+
+    <nav id="shortcuts"></nav>
+  </main>
+
+  <button id="open-settings" data-i18n-title="settingsTitle" title="Réglages">⚙</button>
+
+  <dialog id="settings">
+    <h2 data-i18n="settingsTitle">Réglages</h2>
+    <label><span data-i18n="nameLabel">Prénom (salutation)</span>
+      <input id="set-name" type="text" maxlength="30">
+    </label>
+    <label><span data-i18n="engineLabel">Moteur de recherche</span>
+      <select id="set-engine">
+        <option value="brave">Brave Search</option>
+        <option value="duckduckgo">DuckDuckGo</option>
+        <option value="qwant">Qwant</option>
+        <option value="startpage">Startpage</option>
+        <option value="google">Google</option>
+      </select>
+    </label>
+    <label><span data-i18n="shortcutsLabel">Raccourcis</span>
+      <textarea id="set-shortcuts" rows="6" spellcheck="false"></textarea>
+      <div class="hint" data-i18n="shortcutsHint">Un par ligne : Nom | https://exemple.fr</div>
+    </label>
+    <div class="actions">
+      <button id="set-save" data-i18n="save">Enregistrer</button>
+      <span id="set-status"></span>
+    </div>
+  </dialog>
+
+  <script type="module" src="newtab.js"></script>
+</body>
+</html>

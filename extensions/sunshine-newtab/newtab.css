@@ -1,0 +1,81 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 1.2s ease;
+  color: #fff;
+}
+
+/* Ciel selon le moment de la journée (voir skyTheme dans lib.js) */
+body[data-sky="dawn"]  { background: linear-gradient(180deg, #3b4a73 0%, #C9842A 65%, #F6C36B 100%); }
+body[data-sky="day"]   { background: linear-gradient(180deg, #6db3e8 0%, #aee0f7 60%, #FFF8EE 100%); color: #3A2E1E; }
+body[data-sky="dusk"]  { background: linear-gradient(180deg, #2a3a5e 0%, #E8A23C 70%, #C9842A 100%); }
+body[data-sky="night"] { background: linear-gradient(180deg, #10182e 0%, #2a3a5e 80%, #3b4a73 100%); }
+
+main { text-align: center; padding: 24px; max-width: 680px; width: 100%; }
+
+#clock { font-size: 88px; font-weight: 200; letter-spacing: 2px;
+         text-shadow: 0 2px 14px rgba(0,0,0,.18); }
+#date { font-size: 17px; opacity: .92; text-transform: capitalize; }
+#greeting { font-size: 22px; margin-top: 14px; font-weight: 600; }
+
+#search { margin: 26px auto 0; max-width: 460px; }
+#query {
+  width: 100%; padding: 13px 20px; font-size: 16px;
+  border: none; border-radius: 999px; outline: none;
+  background: rgba(255,255,255,.92); color: #3A2E1E;
+  box-shadow: 0 4px 18px rgba(0,0,0,.18);
+}
+#query:focus { background: #fff; }
+
+#shortcuts { margin-top: 30px; display: flex; flex-wrap: wrap;
+             gap: 16px; justify-content: center; }
+#shortcuts a {
+  width: 84px; text-decoration: none; color: inherit;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  font-size: 12px;
+}
+#shortcuts a span.tile {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 600;
+  background: rgba(255,255,255,.92); color: #C9842A;
+  box-shadow: 0 3px 12px rgba(0,0,0,.16);
+  transition: transform .12s ease;
+}
+#shortcuts a:hover span.tile { transform: translateY(-3px); }
+#shortcuts a span.label {
+  max-width: 84px; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; opacity: .92;
+}
+
+#open-settings {
+  position: fixed; right: 18px; bottom: 16px;
+  border: none; background: rgba(255,255,255,.25); color: inherit;
+  width: 38px; height: 38px; border-radius: 50%;
+  font-size: 17px; cursor: pointer;
+}
+#open-settings:hover { background: rgba(255,255,255,.45); }
+
+dialog {
+  border: none; border-radius: 14px; padding: 20px 22px;
+  width: min(420px, 92vw);
+  font: 14px/1.5 "Segoe UI", Arial, sans-serif; color: #3A2E1E;
+  background: #FFF8EE; box-shadow: 0 12px 40px rgba(0,0,0,.3);
+}
+dialog::backdrop { background: rgba(20, 16, 8, .45); }
+dialog h2 { color: #C9842A; font-size: 16px; margin-bottom: 10px; }
+dialog label { display: block; margin: 10px 0; }
+dialog input[type="text"], dialog select, dialog textarea {
+  width: 100%; margin-top: 3px; padding: 7px 9px;
+  border: 1px solid #d8c9a8; border-radius: 8px; font: inherit;
+}
+dialog .hint { font-size: 11px; color: #8a7a62; margin-top: 2px; }
+dialog .actions { margin-top: 12px; }
+dialog .actions button {
+  border: none; border-radius: 8px; padding: 8px 16px;
+  background: #E8A23C; color: #fff; cursor: pointer;
+}
+dialog .actions button:hover { background: #C9842A; }
+#set-status { margin-left: 10px; color: #3e7a2e; }

@@ -1,0 +1,15 @@
+{
+  "newtabDesc": { "message": "Sunshine's new tab page: clock, greeting, search and shortcuts, under a sky that follows your day." },
+  "greetingNight": { "message": "Good night" },
+  "greetingMorning": { "message": "Good morning" },
+  "greetingAfternoon": { "message": "Good afternoon" },
+  "greetingEvening": { "message": "Good evening" },
+  "searchPlaceholder": { "message": "Search the web…" },
+  "settingsTitle": { "message": "Settings" },
+  "nameLabel": { "message": "First name (greeting)" },
+  "engineLabel": { "message": "Search engine" },
+  "shortcutsLabel": { "message": "Shortcuts" },
+  "shortcutsHint": { "message": "One per line: Name | https://example.com" },
+  "save": { "message": "Save" },
+  "saved": { "message": "✓ saved" }
+}

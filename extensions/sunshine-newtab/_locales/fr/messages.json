@@ -1,0 +1,15 @@
+{
+  "newtabDesc": { "message": "Page « nouvel onglet » de Sunshine : horloge, salutation, recherche et raccourcis, sous un ciel qui suit la journée." },
+  "greetingNight": { "message": "Bonne nuit" },
+  "greetingMorning": { "message": "Bonjour" },
+  "greetingAfternoon": { "message": "Bon après-midi" },
+  "greetingEvening": { "message": "Bonsoir" },
+  "searchPlaceholder": { "message": "Rechercher sur le web…" },
+  "settingsTitle": { "message": "Réglages" },
+  "nameLabel": { "message": "Prénom (salutation)" },
+  "engineLabel": { "message": "Moteur de recherche" },
+  "shortcutsLabel": { "message": "Raccourcis" },
+  "shortcutsHint": { "message": "Un par ligne : Nom | https://exemple.fr" },
+  "save": { "message": "Enregistrer" },
+  "saved": { "message": "✓ enregistré" }
+}

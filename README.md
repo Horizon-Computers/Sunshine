@@ -32,7 +32,7 @@ Les versions épinglées vivent dans le fichier [`VERSION`](VERSION).
 ├── assets/logo/             # Logo Sunshine (source SVG)
 ├── branding/                # Constantes de marque (nom, identifiants, couleurs)
 ├── customize/sunshine.toml  # Personnalisation du navigateur (voir docs/CUSTOMIZE.md)
-├── extensions/              # Extensions intégrées (Assistant IA, Focus anti-scroll)
+├── extensions/              # Extensions intégrées (Assistant IA, Focus, Nouvel onglet)
 ├── patches/                 # Patches appliqués sur brave-core après checkout
 ├── scripts/
 │   ├── init.sh              # Clone brave-browser/brave-core à la version épinglée
@@ -106,6 +106,12 @@ ou via l'API Mistral AI. Voir [docs/ASSISTANT.md](docs/ASSISTANT.md).
 temps passé sur les sites à flux infini et masque Shorts, Reels et
 tendances. Configurable par site, aucune donnée collectée.
 Voir [docs/FOCUS.md](docs/FOCUS.md).
+
+## 🌅 Nouvel onglet
+
+Horloge, salutation, recherche (Brave Search par défaut) et raccourcis, sous
+un ciel qui suit la journée — sans flux d'actualités ni télémétrie.
+Voir [docs/NEWTAB.md](docs/NEWTAB.md).
 
 ## 🖼 Logo
 

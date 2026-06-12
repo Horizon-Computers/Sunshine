@@ -74,6 +74,12 @@ Chaque release indique la version de Brave/Chromium embarquée.
   7 jours. 5 tests dédiés (cumul, purge, bilan, formats).
 - Focus : graphique des 7 derniers jours dans le popup (barres, jour courant
   surligné, info-bulle par jour) + lien « Effacer les statistiques ».
+- **Sunshine New Tab** (`extensions/sunshine-newtab/`) : page « nouvel
+  onglet » — horloge, salutation personnalisable, ciel dégradé suivant
+  l'heure (aube/jour/crépuscule/nuit aux couleurs du logo), recherche
+  (Brave Search par défaut, 4 alternatives), raccourcis éditables. Aucun
+  flux d'actualités, aucune requête réseau spontanée. FR/EN, 9 tests.
+  Docs : `docs/NEWTAB.md`.
 - Pages : le site publie automatiquement le **dépôt APT** quand des `.deb`
   sont attachés à la dernière release (déclenchement aussi à la publication
   d'une release) — la chaîne de mise à jour Linux est bouclée de bout en
