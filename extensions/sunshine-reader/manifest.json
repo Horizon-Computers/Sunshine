@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Sunshine Reader",
+  "version": "1.0.0",
+  "description": "__MSG_readerDesc__",
+  "default_locale": "fr",
+  "permissions": ["activeTab", "scripting"],
+  "web_accessible_resources": [
+    { "resources": ["lib.js"], "matches": ["http://*/*", "https://*/*"] }
+  ],
+  "action": { "default_title": "__MSG_readerTitle__" },
+  "background": { "service_worker": "background.js", "type": "module" }
+}

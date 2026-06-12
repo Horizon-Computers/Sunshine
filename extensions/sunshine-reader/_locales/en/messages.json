@@ -1,0 +1,12 @@
+{
+  "readerDesc": { "message": "Sunshine's zen reading mode: the page without distractions — clean text, estimated reading time, adjustable font size." },
+  "readerTitle": { "message": "Zen reading mode" },
+  "minRead": {
+    "message": "$min$ min read",
+    "placeholders": { "min": { "content": "$1" } }
+  },
+  "smaller": { "message": "Smaller text" },
+  "larger": { "message": "Larger text" },
+  "toggleFont": { "message": "Toggle font" },
+  "close": { "message": "Close (Esc)" }
+}

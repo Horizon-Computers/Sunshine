@@ -1,0 +1,12 @@
+{
+  "readerDesc": { "message": "Mode lecture zen de Sunshine : la page sans distractions — texte épuré, temps de lecture estimé, taille de police réglable." },
+  "readerTitle": { "message": "Mode lecture zen" },
+  "minRead": {
+    "message": "$min$ min de lecture",
+    "placeholders": { "min": { "content": "$1" } }
+  },
+  "smaller": { "message": "Réduire le texte" },
+  "larger": { "message": "Agrandir le texte" },
+  "toggleFont": { "message": "Changer de police" },
+  "close": { "message": "Fermer (Échap)" }
+}
