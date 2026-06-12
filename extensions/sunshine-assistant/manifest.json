@@ -3,7 +3,7 @@
   "name": "Sunshine Assistant",
   "version": "1.0.0",
   "description": "Assistant IA de navigation du navigateur Sunshine, propulsé par Mistral 7B (Ollama local ou API Mistral AI).",
-  "permissions": ["sidePanel", "storage", "scripting", "activeTab"],
+  "permissions": ["sidePanel", "storage", "scripting", "activeTab", "contextMenus"],
   "host_permissions": [
     "http://localhost:11434/*",
     "https://api.mistral.ai/*"

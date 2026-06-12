@@ -20,6 +20,7 @@ test("manifest : structure MV3 valide", () => {
   assert.equal(manifest.name, "Sunshine Assistant");
   assert.ok(manifest.permissions.includes("sidePanel"));
   assert.ok(manifest.permissions.includes("scripting"));
+  assert.ok(manifest.permissions.includes("contextMenus"));
   assert.ok(manifest.host_permissions.some((h) => h.includes("api.mistral.ai")));
   assert.ok(manifest.host_permissions.some((h) => h.includes("localhost:11434")));
 });
@@ -66,6 +67,15 @@ test("buildMessages : historique conservé dans l'ordre", () => {
   const messages = api.buildMessages("q2", history);
   assert.deepEqual(messages.map((m) => m.role),
                    ["system", "user", "assistant", "user"]);
+});
+
+test("buildSelectionQuestion : sélection incluse et tronquée", () => {
+  const q = api.buildSelectionQuestion("  un passage important  ");
+  assert.ok(q.includes("« un passage important »"));
+  assert.ok(q.toLowerCase().includes("explique"));
+  const long = api.buildSelectionQuestion("y".repeat(api.SELECTION_LIMIT + 100));
+  assert.ok(long.includes("[…]"));
+  assert.ok(long.length < api.SELECTION_LIMIT + 200);
 });
 
 // ---------- Parsing des flux ----------

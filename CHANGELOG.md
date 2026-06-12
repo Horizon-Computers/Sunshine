@@ -50,6 +50,9 @@ Chaque release indique la version de Brave/Chromium embarquée.
   (dépôt APT statique signable par GPG pour les mises à jour `apt upgrade`,
   hébergeable sur GitHub Pages). Les deux validés de bout en bout en CI,
   y compris la résolution réelle du paquet par apt.
+- Assistant : menu contextuel « Demander à Sunshine Assistant » sur le texte
+  sélectionné (clic droit → le panneau s'ouvre et explique le passage),
+  bouton 🗨+ nouvelle conversation, carte assistant sur le site vitrine.
 
 ## [1.0.0] - 2026-06-11 (Brave 1.91.171, Chromium 149.0.7827.103)
 

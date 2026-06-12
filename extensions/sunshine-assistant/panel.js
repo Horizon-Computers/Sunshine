@@ -1,5 +1,6 @@
 // Sunshine Assistant — logique du panneau latéral.
-import { DEFAULT_SETTINGS, buildMessages, streamChat } from "./api.js";
+import { DEFAULT_SETTINGS, buildMessages, buildSelectionQuestion,
+         streamChat } from "./api.js";
 
 const $ = (sel) => document.querySelector(sel);
 const messagesEl = $("#messages");
@@ -141,14 +142,41 @@ async function ask(question) {
   }
 }
 
+// ---------- Sélection envoyée par le menu contextuel ----------
+
+async function consumePendingSelection() {
+  const { pendingSelection } =
+    await chrome.storage.session.get("pendingSelection");
+  if (!pendingSelection) return;
+  await chrome.storage.session.remove("pendingSelection");
+  $("#use-page").checked = true;
+  ask(buildSelectionQuestion(pendingSelection));
+}
+
+function greet() {
+  addMessage("assistant",
+    "Bonjour ! Je suis Sunshine Assistant (Mistral 7B). Pose-moi une " +
+    "question sur la page courante, sélectionne du texte puis clic droit → " +
+    "« Demander à Sunshine Assistant », ou utilise les boutons ci-dessus. " +
+    "Configure le backend dans ⚙ (Ollama local par défaut).");
+}
+
+function resetConversation() {
+  history = [];
+  messagesEl.replaceChildren();
+  greet();
+  inputEl.focus();
+}
+
 // ---------- Branchements ----------
 
-function init() {
-  loadSettings();
+async function init() {
+  await loadSettings();
 
   $("#settings-toggle").addEventListener("click", () => {
     $("#settings").hidden = !$("#settings").hidden;
   });
+  $("#new-chat").addEventListener("click", resetConversation);
   $("#settings-save").addEventListener("click", saveSettings);
   $("#settings-test").addEventListener("click", testConnection);
 
@@ -167,10 +195,14 @@ function init() {
     }
   });
 
-  addMessage("assistant",
-    "Bonjour ! Je suis Sunshine Assistant (Mistral 7B). Pose-moi une " +
-    "question sur la page courante ou utilise les boutons ci-dessus. " +
-    "Configure le backend dans ⚙ (Ollama local par défaut).");
+  greet();
+
+  // Sélection en attente (panneau ouvert par le menu contextuel)…
+  consumePendingSelection();
+  // …et sélections suivantes pendant que le panneau reste ouvert.
+  chrome.storage.session.onChanged.addListener((changes) => {
+    if (changes.pendingSelection?.newValue) consumePendingSelection();
+  });
 }
 
 init();

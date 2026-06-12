@@ -21,6 +21,20 @@ export const SYSTEM_PROMPT =
 // Limite de contexte envoyée au modèle (Mistral 7B ≈ 8k tokens).
 export const PAGE_CONTEXT_LIMIT = 12000;
 
+// Limite du texte sélectionné transmis via le menu contextuel.
+export const SELECTION_LIMIT = 4000;
+
+// Question préparée quand l'utilisateur envoie une sélection via clic droit.
+export function buildSelectionQuestion(selection) {
+  let text = selection.trim();
+  if (text.length > SELECTION_LIMIT) {
+    text = text.slice(0, SELECTION_LIMIT) + " […]";
+  }
+  return "Voici un passage sélectionné sur la page :\n" +
+         `« ${text} »\n\n` +
+         "Explique ce passage clairement et, si utile, son contexte.";
+}
+
 // Construit la liste de messages au format chat (commun Ollama / Mistral).
 export function buildMessages(question, history = [], page = null) {
   const messages = [{ role: "system", content: SYSTEM_PROMPT }];

@@ -38,9 +38,13 @@ jamais dans le dépôt.
 1. Clic sur l'icône **Sunshine Assistant** → le panneau latéral s'ouvre.
 2. Boutons rapides : **📝 Résumer**, **🔑 Points clés**, **🌐 Traduire**,
    **💡 Expliquer** (ils lisent l'onglet actif).
-3. Ou question libre ; décocher « 📄 Page courante » pour discuter sans le
+3. **Clic droit sur du texte sélectionné** → « Demander à Sunshine
+   Assistant » : le panneau s'ouvre et explique le passage (limité à
+   4 000 caractères).
+4. Ou question libre ; décocher « 📄 Page courante » pour discuter sans le
    contenu de la page. L'historique de la conversation est conservé dans le
-   panneau (12 derniers échanges envoyés au modèle).
+   panneau (12 derniers échanges envoyés au modèle) ; 🗨+ démarre une
+   nouvelle conversation.
 
 Les réponses s'affichent **en streaming**. Le texte de page envoyé au modèle
 est tronqué à ~12 000 caractères (fenêtre de Mistral 7B).
