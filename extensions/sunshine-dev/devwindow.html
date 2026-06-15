@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Sunshine Dev</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header>
+    <h1>☀️ <span data-i18n="appTitle">Sunshine Dev</span></h1>
+    <div class="target">
+      <label data-i18n="targetLabel" for="target">Onglet à inspecter</label>
+      <select id="target"></select>
+      <button id="analyze" data-i18n="analyzeBtn">Analyser</button>
+      <span id="grade" class="grade" hidden></span>
+    </div>
+  </header>
+
+  <p id="empty" data-i18n="emptyState">
+    Choisis un onglet puis clique sur Analyser pour voir toutes les infos de dev.
+  </p>
+
+  <main id="results" hidden>
+    <section class="card">
+      <h2 data-i18n="secWindow">Fenêtre &amp; écran</h2>
+      <dl>
+        <dt data-i18n="mWindowSize">Fenêtre</dt><dd id="v-window">—</dd>
+        <dt data-i18n="mViewport">Zone d'affichage</dt><dd id="v-viewport">—</dd>
+        <dt data-i18n="mScreen">Écran</dt><dd id="v-screen">—</dd>
+        <dt data-i18n="mDpr">Densité (DPR)</dt><dd id="v-dpr">—</dd>
+        <dt data-i18n="mColorDepth">Profondeur couleur</dt><dd id="v-colordepth">—</dd>
+        <dt data-i18n="mOrientation">Orientation</dt><dd id="v-orientation">—</dd>
+      </dl>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="secPerf">Performance de chargement</h2>
+      <dl>
+        <dt data-i18n="mRedirect">Redirection</dt><dd id="v-redirect">—</dd>
+        <dt data-i18n="mDns">DNS</dt><dd id="v-dns">—</dd>
+        <dt data-i18n="mTcp">TCP</dt><dd id="v-tcp">—</dd>
+        <dt data-i18n="mTls">TLS</dt><dd id="v-tls">—</dd>
+        <dt data-i18n="mTtfb">TTFB (1er octet)</dt><dd id="v-ttfb">—</dd>
+        <dt data-i18n="mDownload">Téléchargement</dt><dd id="v-download">—</dd>
+        <dt data-i18n="mDomInteractive">DOM interactif</dt><dd id="v-dominteractive">—</dd>
+        <dt data-i18n="mDcl">DOMContentLoaded</dt><dd id="v-dcl">—</dd>
+        <dt data-i18n="mLoad">Chargement complet</dt><dd id="v-load">—</dd>
+        <dt data-i18n="mFcp">First Contentful Paint</dt><dd id="v-fcp">—</dd>
+      </dl>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="secResources">Ressources</h2>
+      <table class="res">
+        <tbody id="res-rows"></tbody>
+        <tfoot>
+          <tr><th data-i18n="mResTotal">Total</th><td id="v-rescount">—</td>
+            <td id="v-restransfer">—</td></tr>
+        </tfoot>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="secDom">Structure DOM</h2>
+      <dl>
+        <dt data-i18n="mElements">Éléments</dt><dd id="v-elements">—</dd>
+        <dt data-i18n="mMaxDepth">Profondeur max</dt><dd id="v-maxdepth">—</dd>
+        <dt data-i18n="mImages">Images</dt><dd id="v-images">—</dd>
+        <dt data-i18n="mImagesNoAlt">Images sans alt</dt><dd id="v-imagesnoalt">—</dd>
+        <dt data-i18n="mLinks">Liens</dt><dd id="v-links">—</dd>
+        <dt data-i18n="mScripts">Scripts</dt><dd id="v-scripts">—</dd>
+        <dt data-i18n="mStylesheets">Feuilles de style</dt><dd id="v-stylesheets">—</dd>
+        <dt data-i18n="mIframes">Iframes</dt><dd id="v-iframes">—</dd>
+      </dl>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="secSeo">SEO &amp; métadonnées</h2>
+      <ul id="seo-list" class="seo"></ul>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="secSecurity">Sécurité &amp; stockage</h2>
+      <dl>
+        <dt data-i18n="mHttps">HTTPS</dt><dd id="v-https">—</dd>
+        <dt data-i18n="mMixed">Contenu mixte</dt><dd id="v-mixed">—</dd>
+        <dt data-i18n="mCookies">Cookies</dt><dd id="v-cookies">—</dd>
+        <dt data-i18n="mLocalStorage">localStorage</dt><dd id="v-localstorage">—</dd>
+        <dt data-i18n="mSessionStorage">sessionStorage</dt><dd id="v-sessionstorage">—</dd>
+        <dt data-i18n="mCsp">CSP (meta)</dt><dd id="v-csp">—</dd>
+      </dl>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="secColors">Couleurs &amp; polices</h2>
+      <div id="palette" class="palette"></div>
+      <dl>
+        <dt data-i18n="mFonts">Polices</dt><dd id="v-fonts">—</dd>
+      </dl>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="secResponsive">Test responsive</h2>
+      <p class="hint" data-i18n="breakpointHint">Ouvre la page ciblée dans une fenêtre à la taille choisie.</p>
+      <div id="breakpoints" class="breakpoints"></div>
+      <label class="rotate">
+        <input type="checkbox" id="rotate"> <span data-i18n="rotateBtn">Rotation (paysage)</span>
+      </label>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="secTools">Outils</h2>
+      <button id="highlight" data-i18n="toolHighlight">Surligner les éléments</button>
+      <button id="copy" data-i18n="toolCopy">Copier le rapport</button>
+      <span id="tool-status"></span>
+    </section>
+  </main>
+
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>

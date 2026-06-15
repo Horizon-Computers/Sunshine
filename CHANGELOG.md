@@ -5,7 +5,17 @@ Chaque release indique la version de Brave/Chromium embarquée.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-06-15 (Brave 1.91.171, Chromium 149.0.7827.103)
+
 ### Ajouté
+- **Sunshine Dev** (`extensions/sunshine-dev/`) : mode développeur — un clic
+  ouvre une fenêtre dédiée où l'on garde ses onglets, avec un tableau de bord
+  qui inspecte l'onglet ciblé (`tabs` + `scripting`) : performance de
+  chargement (phases Navigation Timing, FCP), poids des ressources par
+  catégorie, structure DOM, audit SEO/méta noté (A–E), sécurité et stockage,
+  palette de couleurs et polices, testeur responsive (ouverture aux
+  breakpoints courants, rotation) et export du rapport en Markdown. Logique
+  pure dans `lib.js`, 17 tests `node:test` ; FR/EN. Docs : `docs/DEV.md`.
 - Tests unitaires du rebranding (`tests/`, 15 tests) exécutés en CI.
 - Génération des icônes Windows (`sunshine.ico`) et macOS (`sunshine.icns`)
   dans `scripts/generate_icons.sh` ; `apply_branding.py` les installe dans

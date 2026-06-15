@@ -32,7 +32,7 @@ Les versions épinglées vivent dans le fichier [`VERSION`](VERSION).
 ├── assets/logo/             # Logo Sunshine (source SVG)
 ├── branding/                # Constantes de marque (nom, identifiants, couleurs)
 ├── customize/sunshine.toml  # Personnalisation du navigateur (voir docs/CUSTOMIZE.md)
-├── extensions/              # Extensions intégrées (Assistant IA, Focus, Nouvel onglet)
+├── extensions/              # Extensions intégrées (Assistant IA, Focus, Nouvel onglet, Reader, Dev)
 ├── patches/                 # Patches appliqués sur brave-core après checkout
 ├── scripts/
 │   ├── init.sh              # Clone brave-browser/brave-core à la version épinglée
@@ -119,6 +119,14 @@ Voir [docs/READER.md](docs/READER.md).
 Horloge, salutation, recherche (Brave Search par défaut) et raccourcis, sous
 un ciel qui suit la journée — sans flux d'actualités ni télémétrie.
 Voir [docs/NEWTAB.md](docs/NEWTAB.md).
+
+## 🛠 Mode développeur
+
+**Sunshine Dev** ouvre une fenêtre dédiée — tu y gardes tes onglets — avec un
+tableau de bord qui rassemble l'essentiel du dev web sur l'onglet ciblé :
+performance de chargement (DNS, TTFB, FCP…), poids des ressources, structure
+DOM, audit SEO/méta noté, sécurité et stockage, palette de couleurs et
+polices, et un testeur responsive. Voir [docs/DEV.md](docs/DEV.md).
 
 ## 🖼 Logo
 
