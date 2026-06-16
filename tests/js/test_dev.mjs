@@ -186,3 +186,90 @@ test("reportToMarkdown : titre, url et sections", () => {
   assert.ok(md.includes("## Performance"));
   assert.ok(md.includes("- **TTFB** : 50 ms"));
 });
+
+test("reportToJson : objet sérialisé par section", () => {
+  const json = JSON.parse(lib.reportToJson({
+    title: "Ma page", url: "https://exemple.fr", grade: "A",
+    sections: [{ title: "Perf", rows: [["TTFB", "50 ms"], ["Load", "1 s"]] }],
+  }));
+  assert.equal(json.title, "Ma page");
+  assert.equal(json.grade, "A");
+  assert.deepEqual(json.Perf, { TTFB: "50 ms", Load: "1 s" });
+});
+
+// ---------- Améliorations : URLs, contraste, budget, a11y, score global ----------
+
+test("shortenUrl : nom de fichier, hôte, troncature", () => {
+  assert.equal(lib.shortenUrl("https://x.com/assets/app.1234.js"), "app.1234.js");
+  assert.equal(lib.shortenUrl("https://exemple.fr/"), "exemple.fr");
+  const long = lib.shortenUrl("https://x.com/" + "a".repeat(60) + ".css");
+  assert.ok(long.startsWith("…"));
+  assert.ok(long.length <= 43);
+});
+
+test("parseColor : hex court/long et rgb", () => {
+  assert.deepEqual(lib.parseColor("#e8a23c"), [232, 162, 60]);
+  assert.deepEqual(lib.parseColor("#fff"), [255, 255, 255]);
+  assert.deepEqual(lib.parseColor("rgb(0, 128, 255)"), [0, 128, 255]);
+  assert.equal(lib.parseColor("pas une couleur"), null);
+});
+
+test("contrastRatio : extrêmes et cas connu", () => {
+  assert.equal(lib.contrastRatio("#000000", "#ffffff"), 21);
+  assert.equal(lib.contrastRatio("#ffffff", "#ffffff"), 1);
+  assert.equal(lib.contrastRatio("#777777", "#ffffff"), 4.48);
+  assert.equal(lib.contrastRatio("#000", "zzz"), null);
+});
+
+test("wcagLevel : seuils texte normal et large", () => {
+  assert.equal(lib.wcagLevel(21), "AAA");
+  assert.equal(lib.wcagLevel(5), "AA");
+  assert.equal(lib.wcagLevel(3), "—");
+  assert.equal(lib.wcagLevel(3, true), "AA");
+  assert.equal(lib.wcagLevel(4.5, true), "AAA");
+  assert.equal(lib.wcagLevel(null), "—");
+});
+
+test("perfChecks : ok / warn / fail selon les seuils", () => {
+  const good = Object.fromEntries(
+    lib.perfChecks({ ttfb: 200, fcp: 1000, load: 2000 }).map((c) => [c.id, c.status]));
+  assert.deepEqual(good, { ttfb: "ok", fcp: "ok", load: "ok" });
+  const warn = Object.fromEntries(
+    lib.perfChecks({ ttfb: 1000, fcp: 2500, load: 4000 }).map((c) => [c.id, c.status]));
+  assert.deepEqual(warn, { ttfb: "warn", fcp: "warn", load: "warn" });
+  const bad = Object.fromEntries(
+    lib.perfChecks({ ttfb: 3000, fcp: 5000, load: 9000 }).map((c) => [c.id, c.status]));
+  assert.deepEqual(bad, { ttfb: "fail", fcp: "fail", load: "fail" });
+});
+
+test("heaviestResources : tri décroissant, limite, zéro exclu", () => {
+  const top = lib.heaviestResources([
+    { name: "a.js", transferSize: 1000 },
+    { name: "b.css", transferSize: 4000 },
+    { name: "c.png", transferSize: 0 },
+    { name: "d.woff", transferSize: 2000 },
+  ], 2);
+  assert.deepEqual(top, [{ name: "b.css", transfer: 4000 },
+                         { name: "d.woff", transfer: 2000 }]);
+});
+
+test("a11yChecks : page propre vs problèmes", () => {
+  const clean = Object.fromEntries(lib.a11yChecks({
+    imagesNoAlt: 0, inputsNoLabel: 0, linksNoText: 0, buttonsNoText: 0,
+    hasLang: true, hasTitle: true,
+  }).map((c) => [c.id, c.status]));
+  assert.ok(Object.values(clean).every((s) => s === "ok"));
+  const issues = Object.fromEntries(lib.a11yChecks({
+    imagesNoAlt: 3, inputsNoLabel: 1, hasLang: false, hasTitle: false,
+  }).map((c) => [c.id, c.status]));
+  assert.equal(issues.alt, "warn");
+  assert.equal(issues.labels, "warn");
+  assert.equal(issues.lang, "fail");
+  assert.equal(issues.title, "fail");
+});
+
+test("overallScore : moyenne et note", () => {
+  assert.deepEqual(lib.overallScore({ seo: 100, perf: 50, a11y: 75 }),
+                   { score: 75, grade: "B" });
+  assert.equal(lib.overallScore({}).grade, "—");
+});

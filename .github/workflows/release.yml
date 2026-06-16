@@ -48,9 +48,12 @@ jobs:
             echo "- Basé sur **Brave v${BRAVE_VERSION}** (Chromium ${CHROMIUM_VERSION})"
             echo "- Instructions de build : voir \`docs/BUILD.md\`"
             echo
-            echo "**Inclus dans cette release** : extensions Sunshine Assistant"
-            echo "(IA Mistral 7B) et Sunshine Focus (anti-défilement) + thème,"
-            echo "utilisables dans tout navigateur Chromium (mode développeur)."
+            echo "**Extensions intégrées** (zips utilisables dans tout navigateur"
+            echo "Chromium via le mode développeur, jointes à cette release) :"
+            echo
+            for zip in dist/*.zip; do
+              [ -e "$zip" ] && echo "- \`$(basename "$zip")\`"
+            done
             echo
             echo "Les binaires (Windows/macOS/Linux) sont attachés à cette release"
             echo "lorsqu'ils ont été produits sur la machine de build."

@@ -5,6 +5,19 @@ Chaque release indique la version de Brave/Chromium embarquée.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-16 (Brave 1.91.171, Chromium 149.0.7827.103)
+
+### Ajouté
+- **Sunshine Dev** enrichi : **note globale** en en-tête (SEO + performance +
+  accessibilité), **budget performance** noté (TTFB/FCP/chargement complet
+  contre des seuils usuels), **top 5 des ressources les plus lourdes**,
+  section **Accessibilité** (images avec alt, champs étiquetés, liens et
+  boutons nommés, langue et titre de page), **aperçu social** Open
+  Graph/Twitter, **vérificateur de contraste WCAG** (AA/AAA) en direct,
+  export du rapport en **JSON** et case **Auto** (réanalyse toutes les 5 s).
+  8 fonctions pures supplémentaires dans `lib.js`, 33 tests `node:test` pour
+  l'extension. FR/EN.
+
 ## [1.1.0] - 2026-06-15 (Brave 1.91.171, Chromium 149.0.7827.103)
 
 ### Ajouté

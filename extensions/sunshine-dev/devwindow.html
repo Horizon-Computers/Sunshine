@@ -7,12 +7,14 @@
 </head>
 <body>
   <header>
-    <h1>☀️ <span data-i18n="appTitle">Sunshine Dev</span></h1>
+    <h1>☀️ <span data-i18n="appTitle">Sunshine Dev</span>
+      <span id="overall" class="grade" hidden></span></h1>
     <div class="target">
       <label data-i18n="targetLabel" for="target">Onglet à inspecter</label>
       <select id="target"></select>
       <button id="analyze" data-i18n="analyzeBtn">Analyser</button>
-      <span id="grade" class="grade" hidden></span>
+      <label class="auto"><input type="checkbox" id="auto">
+        <span data-i18n="autoRefresh">Auto</span></label>
     </div>
   </header>
 
@@ -34,7 +36,9 @@
     </section>
 
     <section class="card">
-      <h2 data-i18n="secPerf">Performance de chargement</h2>
+      <h2><span data-i18n="secPerf">Performance de chargement</span>
+        <span id="grade-perf" class="grade mini" hidden></span></h2>
+      <ul id="perf-list" class="checks"></ul>
       <dl>
         <dt data-i18n="mRedirect">Redirection</dt><dd id="v-redirect">—</dd>
         <dt data-i18n="mDns">DNS</dt><dd id="v-dns">—</dd>
@@ -58,6 +62,8 @@
             <td id="v-restransfer">—</td></tr>
         </tfoot>
       </table>
+      <h3 data-i18n="mHeaviest">Les plus lourdes</h3>
+      <ol id="heaviest" class="heaviest"></ol>
     </section>
 
     <section class="card">
@@ -75,8 +81,20 @@
     </section>
 
     <section class="card">
-      <h2 data-i18n="secSeo">SEO &amp; métadonnées</h2>
-      <ul id="seo-list" class="seo"></ul>
+      <h2><span data-i18n="secSeo">SEO &amp; métadonnées</span>
+        <span id="grade-seo" class="grade mini" hidden></span></h2>
+      <ul id="seo-list" class="checks"></ul>
+    </section>
+
+    <section class="card">
+      <h2><span data-i18n="secA11y">Accessibilité</span>
+        <span id="grade-a11y" class="grade mini" hidden></span></h2>
+      <ul id="a11y-list" class="checks"></ul>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="secSocial">Aperçu social</h2>
+      <div id="social" class="social"></div>
     </section>
 
     <section class="card">
@@ -100,6 +118,17 @@
     </section>
 
     <section class="card">
+      <h2 data-i18n="secContrast">Vérificateur de contraste</h2>
+      <div class="contrast">
+        <label data-i18n="contrastFg">Texte</label>
+        <input type="color" id="c-fg" value="#3a2e1e">
+        <label data-i18n="contrastBg">Fond</label>
+        <input type="color" id="c-bg" value="#fff8ee">
+        <span id="c-result" class="c-result">—</span>
+      </div>
+    </section>
+
+    <section class="card">
       <h2 data-i18n="secResponsive">Test responsive</h2>
       <p class="hint" data-i18n="breakpointHint">Ouvre la page ciblée dans une fenêtre à la taille choisie.</p>
       <div id="breakpoints" class="breakpoints"></div>
@@ -112,6 +141,7 @@
       <h2 data-i18n="secTools">Outils</h2>
       <button id="highlight" data-i18n="toolHighlight">Surligner les éléments</button>
       <button id="copy" data-i18n="toolCopy">Copier le rapport</button>
+      <button id="copy-json" data-i18n="toolJson">Exporter en JSON</button>
       <span id="tool-status"></span>
     </section>
   </main>

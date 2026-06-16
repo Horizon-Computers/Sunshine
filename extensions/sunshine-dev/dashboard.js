@@ -26,6 +26,7 @@ function collect() {
   }
   const resourceEntries = performance.getEntriesByType("resource");
   const resources = resourceEntries.slice(0, 1000).map((r) => ({
+    name: r.name,
     initiatorType: r.initiatorType,
     transferSize: r.transferSize || 0,
     decodedBodySize: r.decodedBodySize || 0,
@@ -84,6 +85,36 @@ function collect() {
   let imagesNoAlt = 0;
   for (const img of document.images) if (!img.getAttribute("alt")) imagesNoAlt++;
 
+  // Accessibilité : champs sans étiquette, liens/boutons sans nom accessible.
+  const labelFor = new Set();
+  for (const l of document.querySelectorAll("label[for]")) {
+    labelFor.add(l.getAttribute("for"));
+  }
+  let inputsNoLabel = 0;
+  for (const field of document.querySelectorAll("input, select, textarea")) {
+    const type = (field.getAttribute("type") || "").toLowerCase();
+    if (["hidden", "submit", "button", "image", "reset"].includes(type)) continue;
+    const labelled = (field.id && labelFor.has(field.id))
+      || field.closest("label")
+      || field.getAttribute("aria-label")
+      || field.getAttribute("aria-labelledby")
+      || field.getAttribute("title");
+    if (!labelled) inputsNoLabel++;
+  }
+  let linksNoText = 0;
+  for (const a of document.links) {
+    const named = (a.textContent || "").trim()
+      || a.getAttribute("aria-label") || a.getAttribute("title")
+      || a.querySelector("img[alt]:not([alt=''])");
+    if (!named) linksNoText++;
+  }
+  let buttonsNoText = 0;
+  for (const b of document.querySelectorAll("button")) {
+    const named = (b.textContent || "").trim()
+      || b.getAttribute("aria-label") || b.getAttribute("title");
+    if (!named) buttonsNoText++;
+  }
+
   return {
     url: location.href,
     title: document.title || "",
@@ -114,6 +145,17 @@ function collect() {
       charset: document.characterSet || "",
       h1Count: headings.h1,
       headings,
+    },
+    social: {
+      ogTitle: attr('meta[property="og:title"]', "content"),
+      ogDescription: attr('meta[property="og:description"]', "content"),
+      ogImage: attr('meta[property="og:image"]', "content"),
+      twitterCard: attr('meta[name="twitter:card"]', "content"),
+    },
+    a11y: {
+      imagesNoAlt, inputsNoLabel, linksNoText, buttonsNoText,
+      hasLang: !!document.documentElement.getAttribute("lang"),
+      hasTitle: !!(document.title || "").trim(),
     },
     security: {
       https, mixedContent: mixed, cookies, localStorage: ls, sessionStorage: ss,
@@ -219,6 +261,69 @@ function detailFor(check) {
   return "";
 }
 
+function perfDetail(check) { return lib.formatMs(check.value); }
+function a11yDetail(check) { return check.value ? String(check.value) : ""; }
+
+// Rendu générique d'une liste de contrôles (SEO / perf / a11y) + badge de
+// note. Retourne le score (0–100) pour le calcul du score global.
+function renderChecks(listId, gradeId, checks, prefix, detailFn) {
+  const list = document.getElementById(listId);
+  list.replaceChildren();
+  for (const check of checks) {
+    const li = document.createElement("li");
+    const dot = document.createElement("span");
+    dot.className = "dot " + check.status;
+    const label = document.createElement("span");
+    label.textContent = t(`${prefix}_${check.id}`);
+    li.append(dot, label);
+    const detail = detailFn ? detailFn(check) : "";
+    if (detail) {
+      const span = document.createElement("span");
+      span.className = "detail";
+      span.textContent = detail;
+      li.appendChild(span);
+    }
+    list.appendChild(li);
+  }
+  const grade = lib.gradeFromChecks(checks);
+  const badge = document.getElementById(gradeId);
+  badge.hidden = false;
+  badge.textContent = `${grade.grade} · ${grade.score}`;
+  return grade.score;
+}
+
+function renderSocial(social = {}) {
+  const box = $("#social");
+  box.replaceChildren();
+  const hasData = social.ogTitle || social.ogDescription || social.ogImage
+    || social.twitterCard;
+  if (!hasData) { box.textContent = t("socialNoData"); return; }
+  if (social.ogImage) {
+    const img = document.createElement("img");
+    img.className = "og-img";
+    img.referrerPolicy = "no-referrer";
+    img.src = social.ogImage;
+    img.onerror = () => img.remove();
+    box.appendChild(img);
+  }
+  const title = document.createElement("div");
+  title.className = "og-title";
+  title.textContent = social.ogTitle || "—";
+  box.appendChild(title);
+  if (social.ogDescription) {
+    const desc = document.createElement("div");
+    desc.className = "og-desc";
+    desc.textContent = social.ogDescription;
+    box.appendChild(desc);
+  }
+  if (social.twitterCard) {
+    const card = document.createElement("div");
+    card.className = "og-card";
+    card.textContent = `Twitter: ${social.twitterCard}`;
+    box.appendChild(card);
+  }
+}
+
 function render(d) {
   $("#empty").hidden = true;
   $("#results").hidden = false;
@@ -239,6 +344,9 @@ function render(d) {
   }
   const fcp = d.paint["first-contentful-paint"];
   setText("v-fcp", fcp ? lib.formatMs(fcp) : "—");
+  const perfScore = renderChecks("perf-list", "grade-perf",
+    lib.perfChecks({ ttfb: tb.ttfb, fcp: fcp || 0, load: tb.load }),
+    "perf", perfDetail);
 
   const rg = lib.groupResources(d.resources);
   const body = $("#res-rows");
@@ -256,6 +364,19 @@ function render(d) {
   }
   setText("v-rescount", String(rg.count));
   setText("v-restransfer", lib.formatBytes(rg.totalTransfer));
+  const heavy = $("#heaviest");
+  heavy.replaceChildren();
+  for (const r of lib.heaviestResources(d.resources, 5)) {
+    const li = document.createElement("li");
+    const name = document.createElement("span");
+    name.textContent = lib.shortenUrl(r.name);
+    name.title = r.name;
+    const size = document.createElement("span");
+    size.className = "sz";
+    size.textContent = lib.formatBytes(r.transfer);
+    li.append(name, size);
+    heavy.appendChild(li);
+  }
 
   setText("v-elements", String(d.dom.elements));
   setText("v-maxdepth", String(d.dom.maxDepth));
@@ -266,29 +387,11 @@ function render(d) {
   setText("v-stylesheets", String(d.dom.stylesheets));
   setText("v-iframes", String(d.dom.iframes));
 
-  const checks = lib.seoChecks(d.meta);
-  const list = $("#seo-list");
-  list.replaceChildren();
-  for (const check of checks) {
-    const li = document.createElement("li");
-    const dot = document.createElement("span");
-    dot.className = "dot " + check.status;
-    const label = document.createElement("span");
-    label.textContent = t(`seo_${check.id}`);
-    li.append(dot, label);
-    const detail = detailFor(check);
-    if (detail) {
-      const span = document.createElement("span");
-      span.className = "detail";
-      span.textContent = detail;
-      li.appendChild(span);
-    }
-    list.appendChild(li);
-  }
-  const grade = lib.gradeFromChecks(checks);
-  const badge = $("#grade");
-  badge.hidden = false;
-  badge.textContent = `${grade.grade} · ${grade.score}/100`;
+  const seoScore = renderChecks("seo-list", "grade-seo",
+    lib.seoChecks(d.meta), "seo", detailFor);
+  const a11yScore = renderChecks("a11y-list", "grade-a11y",
+    lib.a11yChecks(d.a11y), "a11y", a11yDetail);
+  renderSocial(d.social);
 
   setText("v-https", d.security.https ? t("yes") : t("no"));
   setText("v-mixed", String(d.security.mixedContent));
@@ -307,6 +410,12 @@ function render(d) {
     palette.appendChild(swatch);
   }
   setText("v-fonts", d.fonts.length ? d.fonts.join(", ") : "—");
+
+  const overall = lib.overallScore(
+    { seo: seoScore, perf: perfScore, a11y: a11yScore });
+  const overallBadge = $("#overall");
+  overallBadge.hidden = false;
+  overallBadge.textContent = `${overall.grade} · ${overall.score}`;
 }
 
 // ---------- Test responsive ----------
@@ -366,7 +475,19 @@ function buildReport(d) {
   };
 }
 
+// ---------- Vérificateur de contraste ----------
+
+function updateContrast() {
+  const ratio = lib.contrastRatio($("#c-fg").value, $("#c-bg").value);
+  const level = lib.wcagLevel(ratio);
+  const result = $("#c-result");
+  result.textContent = ratio != null ? `${ratio}:1 · ${level}` : "—";
+  result.className = "c-result " + (level === "—" ? "fail" : "ok");
+}
+
 // ---------- Initialisation ----------
+
+let autoTimer = null;
 
 async function init() {
   applyI18n();
@@ -374,6 +495,7 @@ async function init() {
   ownTabId = own ? own.id : null;
   await populateTargets();
   buildBreakpoints();
+  updateContrast();
 
   $("#analyze").addEventListener("click", analyze);
   $("#highlight").addEventListener("click", async () => {
@@ -384,18 +506,26 @@ async function init() {
         { target: { tabId: tab.id }, func: toggleHighlight });
     } catch { showStatus(t("cannotInspect")); }
   });
-  $("#copy").addEventListener("click", async () => {
-    if (!lastRaw) return;
-    try {
-      await navigator.clipboard.writeText(
-        lib.reportToMarkdown(buildReport(lastRaw)));
-      showStatus(t("copied"));
-    } catch { /* presse-papiers indisponible */ }
+  $("#copy").addEventListener("click", () => copyReport(lib.reportToMarkdown));
+  $("#copy-json").addEventListener("click", () => copyReport(lib.reportToJson));
+  $("#c-fg").addEventListener("input", updateContrast);
+  $("#c-bg").addEventListener("input", updateContrast);
+  $("#auto").addEventListener("change", () => {
+    if ($("#auto").checked) autoTimer = setInterval(analyze, 5000);
+    else if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
   });
   chrome.tabs.onUpdated.addListener(populateTargets);
   chrome.tabs.onRemoved.addListener(populateTargets);
 
   analyze();
+}
+
+async function copyReport(serialize) {
+  if (!lastRaw) return;
+  try {
+    await navigator.clipboard.writeText(serialize(buildReport(lastRaw)));
+    showStatus(t("copied"));
+  } catch { /* presse-papiers indisponible */ }
 }
 
 init();

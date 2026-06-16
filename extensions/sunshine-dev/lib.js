@@ -31,6 +31,61 @@ export function rgbToHex(value) {
     .map((x) => Number(x).toString(16).padStart(2, "0")).join("");
 }
 
+// Raccourcit une URL de ressource pour l'affichage (nom de fichier ou hôte).
+export function shortenUrl(url, max = 42) {
+  let s = String(url || "");
+  try {
+    const u = new URL(s);
+    s = u.pathname === "/" ? u.hostname : (u.pathname.split("/").pop() || u.hostname);
+  } catch { /* garde la chaîne brute */ }
+  if (!s) s = String(url || "");
+  return s.length > max ? "…" + s.slice(-max) : s;
+}
+
+// ---------- Contraste (WCAG) ----------
+
+// "#rgb" | "#rrggbb" | "rgb()/rgba()" → [r, g, b] ; null sinon.
+export function parseColor(value) {
+  const v = String(value || "").trim();
+  let m = /^#([0-9a-f]{6})$/i.exec(v);
+  if (m) return [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16));
+  m = /^#([0-9a-f]{3})$/i.exec(v);
+  if (m) return [...m[1]].map((c) => parseInt(c + c, 16));
+  m = /^rgba?\((\d+),\s*(\d+),\s*(\d+)/i.exec(v);
+  if (m) return [Number(m[1]), Number(m[2]), Number(m[3])];
+  return null;
+}
+
+function relativeLuminance([r, g, b]) {
+  const channel = (c) => {
+    const x = c / 255;
+    return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+}
+
+// Ratio de contraste WCAG entre deux couleurs (1 à 21), null si invalide.
+export function contrastRatio(color1, color2) {
+  const a = parseColor(color1);
+  const b = parseColor(color2);
+  if (!a || !b) return null;
+  const l1 = relativeLuminance(a);
+  const l2 = relativeLuminance(b);
+  const hi = Math.max(l1, l2);
+  const lo = Math.min(l1, l2);
+  return Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100;
+}
+
+// Niveau WCAG atteint pour un ratio : "AAA" | "AA" | "—".
+export function wcagLevel(ratio, largeText = false) {
+  if (ratio == null) return "—";
+  const aa = largeText ? 3 : 4.5;
+  const aaa = largeText ? 4.5 : 7;
+  if (ratio >= aaa) return "AAA";
+  if (ratio >= aa) return "AA";
+  return "—";
+}
+
 // ---------- Performance (Navigation Timing niveau 2) ----------
 
 // Décompose une entrée de navigation en phases (ms, jamais négatives).
@@ -84,6 +139,60 @@ export function groupResources(entries) {
   }
   const list = Object.values(groups).sort((a, b) => b.transfer - a.transfer);
   return { groups: list, count, totalTransfer, totalDecoded };
+}
+
+// Les `n` ressources les plus lourdes (poids transféré décroissant).
+export function heaviestResources(entries, n = 5) {
+  return (entries || [])
+    .map((e) => ({ name: e.name || "", transfer: Number(e.transferSize) || 0 }))
+    .filter((e) => e.transfer > 0)
+    .sort((a, b) => b.transfer - a.transfer)
+    .slice(0, n);
+}
+
+// ---------- Budget performance ----------
+
+// Évalue les métriques clés contre des seuils usuels (ms).
+export function perfChecks({ ttfb = 0, fcp = 0, load = 0 } = {}) {
+  const band = (id, value, good, ok) => ({
+    id,
+    status: value <= good ? "ok" : (value <= ok ? "warn" : "fail"),
+    value: Math.round(value),
+  });
+  return [
+    band("ttfb", ttfb, 800, 1800),
+    band("fcp", fcp, 1800, 3000),
+    band("load", load, 2500, 5000),
+  ];
+}
+
+// ---------- Accessibilité ----------
+
+// Contrôles d'accessibilité rapides à partir des données collectées.
+export function a11yChecks(a = {}) {
+  const zero = (id, n) => ({
+    id, status: (Number(n) || 0) === 0 ? "ok" : "warn", value: Number(n) || 0,
+  });
+  return [
+    zero("alt", a.imagesNoAlt),
+    zero("labels", a.inputsNoLabel),
+    zero("linkText", a.linksNoText),
+    zero("buttonText", a.buttonsNoText),
+    { id: "lang", status: a.hasLang ? "ok" : "fail" },
+    { id: "title", status: a.hasTitle ? "ok" : "fail" },
+  ];
+}
+
+// ---------- Score global ----------
+
+// Moyenne des scores de section (SEO, perf, a11y) → note de synthèse.
+export function overallScore(scores = {}) {
+  const values = Object.values(scores).filter((v) => typeof v === "number");
+  if (!values.length) return { score: 0, grade: "—" };
+  const score = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+  const grade = score >= 90 ? "A" : score >= 75 ? "B"
+    : score >= 60 ? "C" : score >= 40 ? "D" : "E";
+  return { score, grade };
 }
 
 // ---------- SEO / métadonnées ----------
@@ -177,4 +286,13 @@ export function reportToMarkdown(report = {}) {
     }
   }
   return lines.join("\n") + "\n";
+}
+
+// Sérialise un rapport structuré en JSON indenté.
+export function reportToJson(report = {}) {
+  const out = { title: report.title, url: report.url, grade: report.grade };
+  for (const section of report.sections || []) {
+    out[section.title] = Object.fromEntries(section.rows || []);
+  }
+  return JSON.stringify(out, null, 2);
 }
