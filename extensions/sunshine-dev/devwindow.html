@@ -67,6 +67,11 @@
     </section>
 
     <section class="card">
+      <h2 data-i18n="secWaterfall">Chronologie des requêtes</h2>
+      <div id="waterfall" class="waterfall"></div>
+    </section>
+
+    <section class="card">
       <h2 data-i18n="secDom">Structure DOM</h2>
       <dl>
         <dt data-i18n="mElements">Éléments</dt><dd id="v-elements">—</dd>
@@ -129,6 +134,12 @@
     </section>
 
     <section class="card">
+      <h2 data-i18n="secHistory">Historique</h2>
+      <ol id="history" class="history"></ol>
+      <a href="#" id="history-clear" data-i18n="historyClear">Effacer l'historique</a>
+    </section>
+
+    <section class="card">
       <h2 data-i18n="secResponsive">Test responsive</h2>
       <p class="hint" data-i18n="breakpointHint">Ouvre la page ciblée dans une fenêtre à la taille choisie.</p>
       <div id="breakpoints" class="breakpoints"></div>
@@ -140,6 +151,7 @@
     <section class="card">
       <h2 data-i18n="secTools">Outils</h2>
       <button id="highlight" data-i18n="toolHighlight">Surligner les éléments</button>
+      <button id="inspect" data-i18n="toolHover">Inspecter au survol</button>
       <button id="copy" data-i18n="toolCopy">Copier le rapport</button>
       <button id="copy-json" data-i18n="toolJson">Exporter en JSON</button>
       <span id="tool-status"></span>

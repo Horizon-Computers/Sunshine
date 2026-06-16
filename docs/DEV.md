@@ -23,6 +23,8 @@ de la fenêtre), puis **Analyser**. Les informations sont regroupées :
 - **Ressources** : nombre et poids transféré par catégorie (scripts, CSS,
   images, polices, requêtes fetch/XHR, médias…) avec total, et le **top 5 des
   ressources les plus lourdes**.
+- **Chronologie des requêtes** : une *waterfall* des requêtes les plus longues,
+  positionnées sur une échelle de temps commune et colorées par type.
 - **Structure DOM** : nombre d'éléments, profondeur maximale, images (et images
   sans `alt`), liens, scripts, feuilles de style, iframes.
 - **SEO & métadonnées** : contrôles notés 🟢/🟡/🔴 (titre, meta description,
@@ -44,8 +46,16 @@ de la fenêtre), puis **Analyser**. Les informations sont regroupées :
 - **Outils** : *Surligner les éléments* (contour CSS sur la page ciblée),
   *Copier le rapport* (Markdown) et *Exporter en JSON*.
 
+- **Outils** : *Surligner les éléments*, *Inspecter au survol* (contour +
+  étiquette `balise#id · L×H` sous le curseur), *Copier le rapport* (Markdown)
+  et *Exporter en JSON*.
+- **Historique** : chaque analyse manuelle est enregistrée localement (note
+  globale + horodatage), avec l'**écart** par rapport à la précédente analyse
+  de la même URL — pour suivre une page à l'optimisation.
+
 Une **note globale** (en-tête) combine les scores SEO, performance et
-accessibilité. Une case **Auto** réanalyse l'onglet toutes les 5 secondes.
+accessibilité. Une case **Auto** réanalyse l'onglet toutes les 5 secondes
+(sans alimenter l'historique).
 
 ## Confidentialité
 
@@ -62,9 +72,14 @@ La donnée brute est collectée dans la page par une fonction autonome injectée
 (`collect`, dans `dashboard.js`). Toute la mise en forme et le scoring vivent
 dans `lib.js` (fonctions pures), couverts par `tests/js/test_dev.mjs` :
 formats (octets, ms, rgb→hex, URLs courtes), décomposition du
-*Navigation Timing*, regroupement et tri des ressources, contrôles SEO /
-performance / accessibilité et notes de synthèse, contraste WCAG, score
-global, tailles de fenêtre responsive, palette, export Markdown et JSON.
+*Navigation Timing*, regroupement et tri des ressources, *waterfall*
+normalisée, contrôles SEO / performance / accessibilité et notes de synthèse,
+contraste WCAG, score global, historique (cumul, écarts), libellé d'élément,
+tailles de fenêtre responsive, palette, export Markdown et JSON.
+
+Les statistiques (réglages et historique) restent dans
+`chrome.storage.local` ; l'inspection au survol n'agit que sur action et ne
+transmet rien.
 L'interface est bilingue FR/EN (`_locales/`) et son rendu se vérifie en
 chargeant l'extension dans un navigateur.
 

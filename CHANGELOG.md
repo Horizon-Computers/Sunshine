@@ -5,6 +5,17 @@ Chaque release indique la version de Brave/Chromium embarquée.
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-06-16 (Brave 1.91.171, Chromium 149.0.7827.103)
+
+### Ajouté
+- **Sunshine Dev** : **chronologie des requêtes** (waterfall normalisée des
+  requêtes les plus longues, colorée par type), **historique des analyses**
+  local (note globale horodatée + écart vs analyse précédente de la même URL,
+  20 derniers, hors auto-actualisation) et outil **Inspecter au survol**
+  (contour + étiquette `balise#id · L×H` sous le curseur). 6 fonctions pures
+  de plus (`buildWaterfall`, `pushHistory`, `lastForUrl`, `scoreDelta`,
+  `formatDelta`, `elementLabel`), 31 tests `node:test` pour l'extension. FR/EN.
+
 ## [1.2.0] - 2026-06-16 (Brave 1.91.171, Chromium 149.0.7827.103)
 
 ### Ajouté

@@ -6,6 +6,7 @@ const t = (key, subs) => chrome.i18n.getMessage(key, subs) || key;
 
 let ownTabId = null;
 let lastRaw = null;
+let history = [];
 
 // ---------- Fonctions injectées dans la page cible ----------
 // Autonomes (sérialisées par scripting.executeScript) : aucune dépendance.
@@ -30,6 +31,8 @@ function collect() {
     initiatorType: r.initiatorType,
     transferSize: r.transferSize || 0,
     decodedBodySize: r.decodedBodySize || 0,
+    start: r.startTime || 0,
+    duration: r.duration || 0,
   }));
 
   const all = document.getElementsByTagName("*");
@@ -176,6 +179,46 @@ function toggleHighlight() {
   document.documentElement.appendChild(style);
 }
 
+function toggleInspect() {
+  const ID = "sunshine-dev-inspect";
+  const existing = document.getElementById(ID);
+  if (existing) { existing._cleanup && existing._cleanup(); existing.remove(); return; }
+  const tip = document.createElement("div");
+  tip.id = ID;
+  tip.style.cssText = "position:fixed;z-index:2147483647;pointer-events:none;" +
+    "background:#3A2E1E;color:#FFF8EE;font:12px/1.4 system-ui,sans-serif;" +
+    "padding:3px 7px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.4);" +
+    "max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;";
+  let last = null;
+  const move = (event) => {
+    const el = event.target;
+    if (!el || el === tip) return;
+    if (last && last !== el) last.style.outline = last._oldOutline || "";
+    if (el !== last) {
+      el._oldOutline = el.style.outline;
+      el.style.outline = "2px solid #E8A23C";
+      last = el;
+    }
+    const rect = el.getBoundingClientRect();
+    const tag = el.tagName.toLowerCase();
+    let sel = tag;
+    if (el.id) sel += "#" + el.id;
+    else if (el.className && typeof el.className === "string") {
+      const first = el.className.trim().split(/\s+/)[0];
+      if (first) sel += "." + first;
+    }
+    tip.textContent = `${sel} · ${Math.round(rect.width)}×${Math.round(rect.height)}`;
+    tip.style.left = Math.min(event.clientX + 12, window.innerWidth - 220) + "px";
+    tip.style.top = (event.clientY + 14) + "px";
+  };
+  document.addEventListener("mousemove", move, true);
+  tip._cleanup = () => {
+    document.removeEventListener("mousemove", move, true);
+    if (last) last.style.outline = last._oldOutline || "";
+  };
+  document.documentElement.appendChild(tip);
+}
+
 // ---------- i18n ----------
 
 function applyI18n() {
@@ -234,7 +277,7 @@ function showStatus(text) {
   setTimeout(() => { el.textContent = ""; }, 2500);
 }
 
-async function analyze() {
+async function analyze(record = false) {
   const tab = await resolveTargetTab();
   if (!inspectable(tab)) { showStatus(t("cannotInspect")); return; }
   let result;
@@ -247,7 +290,8 @@ async function analyze() {
   }
   if (!result) { showStatus(t("cannotInspect")); return; }
   lastRaw = result;
-  render(result);
+  const scores = render(result);
+  if (record && scores) await recordHistory(scores);
 }
 
 function detailFor(check) {
@@ -290,6 +334,72 @@ function renderChecks(listId, gradeId, checks, prefix, detailFn) {
   badge.hidden = false;
   badge.textContent = `${grade.grade} · ${grade.score}`;
   return grade.score;
+}
+
+function renderWaterfall(resources) {
+  const box = $("#waterfall");
+  box.replaceChildren();
+  const wf = lib.buildWaterfall(resources, 12);
+  if (!wf.rows.length) { box.textContent = t("waterfallEmpty"); return; }
+  for (const row of wf.rows) {
+    const line = document.createElement("div");
+    line.className = "wf-row";
+    const label = document.createElement("span");
+    label.className = "wf-label";
+    label.textContent = lib.shortenUrl(row.name, 24);
+    label.title = row.name;
+    const track = document.createElement("span");
+    track.className = "wf-track";
+    const bar = document.createElement("span");
+    bar.className = "wf-bar t-" + row.type;
+    bar.style.marginLeft = row.offsetPct + "%";
+    bar.style.width = row.widthPct + "%";
+    track.appendChild(bar);
+    const dur = document.createElement("span");
+    dur.className = "wf-dur";
+    dur.textContent = lib.formatMs(row.duration);
+    line.append(label, track, dur);
+    box.appendChild(line);
+  }
+}
+
+function renderHistory() {
+  const box = $("#history");
+  box.replaceChildren();
+  if (!history.length) { box.textContent = t("historyEmpty"); return; }
+  for (const rec of history.slice(0, 8)) {
+    const li = document.createElement("li");
+    const time = document.createElement("span");
+    time.className = "h-time";
+    time.textContent = new Date(rec.ts).toLocaleTimeString(undefined,
+      { hour: "2-digit", minute: "2-digit" });
+    const url = document.createElement("span");
+    url.className = "h-url";
+    url.textContent = lib.shortenUrl(rec.url, 30);
+    url.title = rec.url;
+    const score = document.createElement("span");
+    score.className = "h-score";
+    score.textContent = String(rec.overall);
+    li.append(time, url, score);
+    if (typeof rec.delta === "number" && rec.delta !== 0) {
+      const delta = document.createElement("span");
+      delta.className = "h-delta " + (rec.delta > 0 ? "up" : "down");
+      delta.textContent = lib.formatDelta(rec.delta);
+      li.appendChild(delta);
+    }
+    box.appendChild(li);
+  }
+}
+
+async function recordHistory(scores) {
+  const previous = lib.lastForUrl(history, scores.url);
+  const delta = previous ? lib.scoreDelta(previous, scores).overall : null;
+  history = lib.pushHistory(history, {
+    ts: Date.now(), url: scores.url, overall: scores.overall,
+    seo: scores.seo, perf: scores.perf, a11y: scores.a11y, delta,
+  });
+  await chrome.storage.local.set({ devHistory: history });
+  renderHistory();
 }
 
 function renderSocial(social = {}) {
@@ -377,6 +487,7 @@ function render(d) {
     li.append(name, size);
     heavy.appendChild(li);
   }
+  renderWaterfall(d.resources);
 
   setText("v-elements", String(d.dom.elements));
   setText("v-maxdepth", String(d.dom.maxDepth));
@@ -416,6 +527,9 @@ function render(d) {
   const overallBadge = $("#overall");
   overallBadge.hidden = false;
   overallBadge.textContent = `${overall.grade} · ${overall.score}`;
+
+  return { url: d.url, overall: overall.score,
+           seo: seoScore, perf: perfScore, a11y: a11yScore };
 }
 
 // ---------- Test responsive ----------
@@ -494,30 +608,45 @@ async function init() {
   const own = await chrome.tabs.getCurrent();
   ownTabId = own ? own.id : null;
   await populateTargets();
+  await loadHistory();
   buildBreakpoints();
   updateContrast();
 
-  $("#analyze").addEventListener("click", analyze);
-  $("#highlight").addEventListener("click", async () => {
-    const tab = await resolveTargetTab();
-    if (!inspectable(tab)) { showStatus(t("cannotInspect")); return; }
-    try {
-      await chrome.scripting.executeScript(
-        { target: { tabId: tab.id }, func: toggleHighlight });
-    } catch { showStatus(t("cannotInspect")); }
-  });
+  $("#analyze").addEventListener("click", () => analyze(true));
+  $("#highlight").addEventListener("click", () => runTool(toggleHighlight));
+  $("#inspect").addEventListener("click", () => runTool(toggleInspect));
   $("#copy").addEventListener("click", () => copyReport(lib.reportToMarkdown));
   $("#copy-json").addEventListener("click", () => copyReport(lib.reportToJson));
+  $("#history-clear").addEventListener("click", async (event) => {
+    event.preventDefault();
+    history = [];
+    await chrome.storage.local.remove("devHistory");
+    renderHistory();
+  });
   $("#c-fg").addEventListener("input", updateContrast);
   $("#c-bg").addEventListener("input", updateContrast);
   $("#auto").addEventListener("change", () => {
-    if ($("#auto").checked) autoTimer = setInterval(analyze, 5000);
+    if ($("#auto").checked) autoTimer = setInterval(() => analyze(false), 5000);
     else if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
   });
   chrome.tabs.onUpdated.addListener(populateTargets);
   chrome.tabs.onRemoved.addListener(populateTargets);
 
-  analyze();
+  analyze(true);
+}
+
+async function loadHistory() {
+  const { devHistory } = await chrome.storage.local.get("devHistory");
+  history = devHistory || [];
+  renderHistory();
+}
+
+async function runTool(func) {
+  const tab = await resolveTargetTab();
+  if (!inspectable(tab)) { showStatus(t("cannotInspect")); return; }
+  try {
+    await chrome.scripting.executeScript({ target: { tabId: tab.id }, func });
+  } catch { showStatus(t("cannotInspect")); }
 }
 
 async function copyReport(serialize) {

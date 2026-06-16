@@ -296,3 +296,75 @@ export function reportToJson(report = {}) {
   }
   return JSON.stringify(out, null, 2);
 }
+
+// ---------- Chronologie des requêtes (waterfall) ----------
+
+// Construit une chronologie normalisée des `n` requêtes les plus longues,
+// positionnées sur une échelle commune (pourcentages) et triées par début.
+export function buildWaterfall(entries, n = 12) {
+  const valid = (entries || [])
+    .filter((e) => (Number(e.duration) || 0) > 0)
+    .map((e) => ({
+      name: e.name || "", type: e.initiatorType || "other",
+      start: Number(e.start) || 0, duration: Number(e.duration) || 0,
+    }));
+  if (!valid.length) return { rows: [], total: 0 };
+  const top = [...valid]
+    .sort((a, b) => b.duration - a.duration).slice(0, n)
+    .sort((a, b) => a.start - b.start);
+  const minStart = Math.min(...top.map((e) => e.start));
+  const maxEnd = Math.max(...top.map((e) => e.start + e.duration));
+  const total = Math.max(1, maxEnd - minStart);
+  const rows = top.map((e) => ({
+    name: e.name, type: e.type, duration: e.duration,
+    offsetPct: ((e.start - minStart) / total) * 100,
+    widthPct: Math.max(1, (e.duration / total) * 100),
+  }));
+  return { rows, total };
+}
+
+// ---------- Historique des analyses ----------
+
+export const HISTORY_MAX = 20;
+
+// Ajoute un enregistrement en tête et borne la taille de l'historique.
+export function pushHistory(list, record, max = HISTORY_MAX) {
+  return [record, ...(list || [])].slice(0, max);
+}
+
+// Dernier enregistrement (hors `exceptTs`) pour une URL donnée.
+export function lastForUrl(list, url, exceptTs = null) {
+  return (list || []).find((r) => r.url === url && r.ts !== exceptTs) || null;
+}
+
+// Écart de scores entre deux enregistrements, ou null.
+export function scoreDelta(previous, current) {
+  if (!previous || !current) return null;
+  const diff = (k) => (Number(current[k]) || 0) - (Number(previous[k]) || 0);
+  return {
+    overall: diff("overall"), seo: diff("seo"),
+    perf: diff("perf"), a11y: diff("a11y"),
+  };
+}
+
+// "+5" | "-3" | "=" pour l'affichage d'un écart.
+export function formatDelta(n) {
+  const v = Number(n) || 0;
+  if (v === 0) return "=";
+  return v > 0 ? `+${v}` : String(v);
+}
+
+// ---------- Inspection au survol ----------
+
+// Libellé compact d'un élément survolé : "div#id · 320×48".
+export function elementLabel({ tag = "", id = "", className = "",
+                               width = 0, height = 0 } = {}) {
+  let selector = String(tag).toLowerCase() || "?";
+  if (id) {
+    selector += `#${id}`;
+  } else if (className) {
+    const first = String(className).trim().split(/\s+/)[0];
+    if (first) selector += `.${first}`;
+  }
+  return `${selector} · ${Math.round(width)}×${Math.round(height)}`;
+}

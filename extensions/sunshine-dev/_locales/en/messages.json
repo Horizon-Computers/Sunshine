@@ -90,5 +90,11 @@
   "secContrast": { "message": "Contrast checker" },
   "contrastFg": { "message": "Text" },
   "contrastBg": { "message": "Background" },
-  "toolJson": { "message": "Export as JSON" }
+  "toolJson": { "message": "Export as JSON" },
+  "secWaterfall": { "message": "Request timeline" },
+  "waterfallEmpty": { "message": "No timeline data." },
+  "secHistory": { "message": "History" },
+  "historyEmpty": { "message": "No analysis recorded yet." },
+  "historyClear": { "message": "Clear history" },
+  "toolHover": { "message": "Inspect on hover" }
 }

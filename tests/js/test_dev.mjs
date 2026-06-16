@@ -273,3 +273,65 @@ test("overallScore : moyenne et note", () => {
                    { score: 75, grade: "B" });
   assert.equal(lib.overallScore({}).grade, "—");
 });
+
+// ---------- Waterfall, historique, inspection ----------
+
+test("buildWaterfall : sélection, tri par début, normalisation", () => {
+  const wf = lib.buildWaterfall([
+    { name: "a.js", initiatorType: "script", start: 0, duration: 100 },
+    { name: "b.css", initiatorType: "link", start: 50, duration: 400 },
+    { name: "c.png", initiatorType: "img", start: 200, duration: 0 },
+    { name: "d.woff", initiatorType: "font", start: 300, duration: 200 },
+  ], 12);
+  // c.png (durée 0) exclu ; reste trié par start : a(0), b(50), d(300).
+  assert.equal(wf.rows.length, 3);
+  assert.deepEqual(wf.rows.map((r) => r.name), ["a.js", "b.css", "d.woff"]);
+  assert.equal(wf.rows[0].offsetPct, 0);
+  // fenêtre : min 0, max end = 300+200 = 500 → total 500.
+  assert.equal(wf.total, 500);
+  assert.equal(wf.rows[2].offsetPct, 60);   // 300/500
+  assert.equal(wf.rows[1].widthPct, 80);    // 400/500
+});
+
+test("buildWaterfall : aucune requête chronométrée", () => {
+  assert.deepEqual(lib.buildWaterfall([{ duration: 0 }]), { rows: [], total: 0 });
+  assert.deepEqual(lib.buildWaterfall([]), { rows: [], total: 0 });
+});
+
+test("pushHistory : tête de liste et borne", () => {
+  let h = [];
+  for (let i = 1; i <= 25; i++) h = lib.pushHistory(h, { ts: i, overall: i }, 20);
+  assert.equal(h.length, 20);
+  assert.equal(h[0].ts, 25);
+  assert.equal(h.at(-1).ts, 6);
+});
+
+test("lastForUrl : filtre par URL et exclut l'enregistrement courant", () => {
+  const list = [
+    { ts: 3, url: "https://a.fr", overall: 80 },
+    { ts: 2, url: "https://b.fr", overall: 50 },
+    { ts: 1, url: "https://a.fr", overall: 70 },
+  ];
+  assert.equal(lib.lastForUrl(list, "https://a.fr", 3).ts, 1);
+  assert.equal(lib.lastForUrl(list, "https://b.fr").ts, 2);
+  assert.equal(lib.lastForUrl(list, "https://z.fr"), null);
+});
+
+test("scoreDelta / formatDelta", () => {
+  assert.deepEqual(
+    lib.scoreDelta({ overall: 70, seo: 80, perf: 60, a11y: 70 },
+                   { overall: 75, seo: 80, perf: 70, a11y: 65 }),
+    { overall: 5, seo: 0, perf: 10, a11y: -5 });
+  assert.equal(lib.scoreDelta(null, { overall: 5 }), null);
+  assert.equal(lib.formatDelta(5), "+5");
+  assert.equal(lib.formatDelta(-3), "-3");
+  assert.equal(lib.formatDelta(0), "=");
+});
+
+test("elementLabel : sélecteur (id prioritaire) et dimensions", () => {
+  assert.equal(lib.elementLabel({ tag: "DIV", id: "main", width: 320, height: 48.6 }),
+               "div#main · 320×49");
+  assert.equal(lib.elementLabel({ tag: "SPAN", className: "btn primary", width: 10, height: 10 }),
+               "span.btn · 10×10");
+  assert.equal(lib.elementLabel({ tag: "P", width: 5, height: 5 }), "p · 5×5");
+});

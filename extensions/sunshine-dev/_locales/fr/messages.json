@@ -90,5 +90,11 @@
   "secContrast": { "message": "Vérificateur de contraste" },
   "contrastFg": { "message": "Texte" },
   "contrastBg": { "message": "Fond" },
-  "toolJson": { "message": "Exporter en JSON" }
+  "toolJson": { "message": "Exporter en JSON" },
+  "secWaterfall": { "message": "Chronologie des requêtes" },
+  "waterfallEmpty": { "message": "Pas de données de chronologie." },
+  "secHistory": { "message": "Historique" },
+  "historyEmpty": { "message": "Aucune analyse enregistrée." },
+  "historyClear": { "message": "Effacer l'historique" },
+  "toolHover": { "message": "Inspecter au survol" }
 }
