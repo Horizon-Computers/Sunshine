@@ -94,12 +94,12 @@ Page d'accueil, couleurs du thème, favoris préinstallés, vie privée
 Par défaut, Sunshine est « le moteur de Brave sans la couche crypto ».
 Voir [docs/CUSTOMIZE.md](docs/CUSTOMIZE.md).
 
-## 🤖 Assistant IA (Mistral 7B)
+## 🤖 Assistant IA
 
-Sunshine embarque **Sunshine Assistant**, un panneau latéral qui résume,
+Sunshine embarque **Astyon IA**, un panneau latéral qui résume,
 traduit et explique la page courante et répond à tes questions — propulsé par
-**Mistral 7B**, en local via [Ollama](https://ollama.com) (privé, par défaut)
-ou via l'API Mistral AI. Voir [docs/ASSISTANT.md](docs/ASSISTANT.md).
+**Mistral 7B** ou **Gemma 2B** fork sur le nom de Astyon Lite 7B et Astyon Lite 2B, en local via [Ollama](https://ollama.com) (privé, par défaut)
+afin de rester local. Voir [docs/ASSISTANT.md](docs/ASSISTANT.md).
 
 ## 🧘 Anti-défilement infini
 
